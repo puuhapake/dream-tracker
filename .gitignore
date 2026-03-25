@@ -5,3 +5,6 @@ venv/
 .venv
 
 temp/
+
+database.db
+config/.secret_key
