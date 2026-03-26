@@ -1,7 +1,8 @@
 from flask import Flask
 from flask import render_template, request, redirect, session
 
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash
 
 import sqlite3
 import config
@@ -27,7 +28,7 @@ def publish():
     dream = request.form["dream"]
 
     db.execute("""
-        INSERT INTO Posts (poster_id, title, sleep_quality, dream_description)
+        INSERT INTO Posts (poster_id, title, sleep_quality, dream)
         VALUES (?, ?, ?, ?)
     """, [user_id, title, quality, dream])
     return redirect("/")
@@ -53,6 +54,10 @@ def create_user():
     except sqlite3.IntegrityError:
         return "ERR: Användarnamn upptaget"
 
+    sql = """SELECT id FROM Users WHERE username = ?"""
+    user_id = db.query(sql, [username])[0]["id"]
+
+    session["user_id"] = user_id 
     session["username"] = username
     return "Användarkonto skapat"
 
@@ -84,6 +89,12 @@ def login():
 
 @app.route("/logout")
 def logout():
-    del session["user_id"]
-    del session["username"]
+    try:
+        del session["user_id"]
+    except Exception as ex:
+        print(ex)
+    try: 
+        del session["username"]
+    except Exception as ex:
+        print(ex)
     return redirect("/")
