@@ -16,7 +16,8 @@ def get(uid=None):
         return db.query(query)
     if isinstance(uid, int):
         query = """
-            SELECT p.title, u.username,
+            SELECT u.id uid, p.id pid, 
+                   p.title, u.username,
                    p.sleep_quality, p.dream
             FROM Posts p, Users u
             WHERE p.poster_id = u.id
@@ -24,6 +25,14 @@ def get(uid=None):
         return db.query(query, [uid])[0]
     else:
         raise NotImplementedError
+
+def update(pid, title, quality, dream):
+    db.execute("""UPDATE Posts
+    SET title = ?,
+        dream = ?,
+        sleep_quality = ?
+    WHERE id = ?
+    """, [title, quality, dream, pid])
 
 def user_count():
     query = "SELECT COUNT(id) count FROM Users"

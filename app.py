@@ -42,6 +42,21 @@ def publish():
 
     return redirect("/")
 
+@app.route("/edit_post/<int:pid>")
+def edit_post(pid):
+    post = posts.get(pid)
+    return render_template("edit_post.html", post=post)
+
+@app.route("/edit", methods=["POST"])
+def edit():
+    pid = request.form["post_id"]
+    title = request.form["title"]
+    quality = request.form["sleep_quality"]
+    dream = request.form["dream"]
+
+    posts.update(pid, title, quality, dream)
+    return redirect(f"post/{pid}")
+
 @app.route("/register")
 def register():
     return render_template("register.html")

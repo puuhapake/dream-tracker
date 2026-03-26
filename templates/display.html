@@ -6,11 +6,17 @@
 </head>
 
 <body>
-  <h1>{{ post.title }}</h1> 
-  <p><i>av {{ post.username }}</i></p>
+  <h2>{{ post.title }}</h2> 
+  <i>av {{ post.username }}</i>
   <p>Sömnkvalitet: {{ post.sleep_quality }}</p>
   <p>{{ post.dream }}</p>
-  <a href="/">Tillbaka till hemsidan</a>
+  {% if session.user_id == post.uid %}
+  <p>
+    <a href="/edit_post/{{ post.pid }}">Redigera</a>
+    <a href="/delete_post/{{ post.pid }}">Radera</a>
+  </p>
+  {% endif %}
+  <br /><a href="/">Tillbaka till hemsidan</a>
 </body>
 
 </html>
