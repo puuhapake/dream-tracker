@@ -68,6 +68,12 @@ def delete_post(pid):
         return redirect("/")
     return redirect(f"/post/{pid}")
 
+@app.route("/search")
+def search():
+    query = request.args.get("q") or ""
+    results = posts.find(query) if query else []
+    return render_template("search.html", q=query, results=results)
+
 @app.route("/register")
 def register():
     return render_template("register.html")
@@ -95,12 +101,6 @@ def create_user():
     session["user_id"] = user_id 
     session["username"] = username
     return redirect("/")
-
-# @app.route("/redirect")
-# def delayed_redirect(params?):
-# disp params
-# time.sleep(3)
-# return redirect("/")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

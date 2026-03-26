@@ -27,7 +27,8 @@ def get(uid=None):
         raise NotImplementedError
 
 def update(pid, title, quality, dream):
-    db.execute("""UPDATE Posts
+    db.execute("""
+    UPDATE Posts
     SET title = ?,
         dream = ?,
         sleep_quality = ?
@@ -36,6 +37,16 @@ def update(pid, title, quality, dream):
 
 def delete(pid):
     db.execute("DELETE FROM Posts WHERE id = ?", [pid])
+
+def find(query):
+    ex = f"%{query}%"
+    return db.query("""
+        SELECT id, title
+        FROM Posts
+        WHERE title LIKE ?
+           OR dream LIKE ?
+        ORDER BY id DESC
+    """, [ex, ex])
 
 def user_count():
     query = "SELECT COUNT(id) count FROM Users"

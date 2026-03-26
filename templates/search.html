@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Sök efter inlägg</title>
+</head>
+
+<body>
+  <h1>Sök efter inlägg</h1>
+
+  <form action="/search" method="get">
+    <p>
+      Sökord: <input type="text" name="q" value="{{ q }}">
+    </p>
+    <input type="submit" name="find" value="Sök">
+    <a href="/">Tillbaka</a>
+  </form>
+
+  {% if q %}
+  <h2>Inlägg</h2>
+    {% if results and results|length > 0 %}
+    <ul>
+      {% for post in results %}
+        <li>
+          <a href="/post/{{ post.id }}">{{ post.title }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      Inga sökresultat hittades.
+    {% endif %}
+  {% endif %}
+</body>
+
+</html>
