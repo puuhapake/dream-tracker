@@ -8,6 +8,6 @@ CREATE TABLE Posts (
     id INTEGER PRIMARY KEY,
     poster_id INTEGER REFERENCES Users(id),
     title TEXT,
-    sleep_quality INTEGER,
+    sleep_quality TEXT,
     dream TEXT
 );
