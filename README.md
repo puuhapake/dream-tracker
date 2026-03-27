@@ -18,4 +18,25 @@ Användare kan
 - lägga till inlägg i samlingslistor
 
 # Installation
-Fortsättning följer...
+
+1. Ladda ner repon och navigera till dess mapp med en valfri terminal
+2. Installera `flask`:
+
+```
+$ pip install flask
+```
+
+eller i en `venv`-virtualomgivning:
+
+```
+$ python -m venv venv
+$ venv/bin/activate
+```
+
+3. Starta servern och navigera till `localhost:5000` med en valfri webbläsare
+
+```
+$ flask run
+```
+
+Programmet skapar databasen och konfigureringar automatiskt.

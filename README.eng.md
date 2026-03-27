@@ -15,4 +15,25 @@ Users can
 - add posts to curated lists
 
 # Installation
-To be determined...
+
+1. Clone the repo and navigate to its directory with a terminal of your choice
+2. Install `flask`:
+
+```
+$ pip install flask
+```
+
+or as a self-contained virtual environment
+
+```
+$ python -m venv venv
+$ venv/bin/activate
+```
+
+3. Start the server and navigate to `localhost:5000` with a browser of your choice
+
+```
+$ flask run
+```
+
+The app will initialize the database and any configurations automatically.

@@ -15,4 +15,25 @@ Käyttäjät voivat
 - lisätä päivityksiä omiin keräyslistoihin
 
 # Asennus
-Tulossa
+
+1. Lataa repon sisältö ja avaa kansio valinnaisessa terminaalissa
+2. Asenna `flask`:
+
+```
+$ pip install flask
+```
+
+tai virtuaaliympäristössä
+
+```
+$ python -m venv venv
+$ venv/bin/activate
+```
+
+3. Käynnistä palvelin ja avaa osoite `localhost:5000` valinnaisella verkkoselaimella
+
+```
+$ flask run
+```
+
+Applikaatio alustaa tietokannan ja asetukset automaattisesti.
