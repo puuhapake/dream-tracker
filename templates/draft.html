@@ -9,7 +9,8 @@
   <form action="/publish" method="post">
     <p>
       Titel: <br />
-      <input type="text" name="title" />
+      <input type="text" name="title" 
+      maxlength="{{ title_max }}" required/>
     </p>
     <p>
       Sov du gott? <br />
@@ -25,7 +26,8 @@
     </p>
     <p>
       Vad drömde du om? <br />
-      <textarea name="dream" rows="10" cols="64"></textarea>
+      <textarea name="dream" rows="10" cols="64" maxlength="{{ dream_max }}">
+      </textarea>
     </p>
     <input type="submit" value="Publicera" />
   </form>

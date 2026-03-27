@@ -1,6 +1,12 @@
 from secrets import token_hex
 from pathlib import Path
 
+MAX_TITLE_LENGTH = 35
+MAX_DREAM_LENGTH = 900
+MAX_USERNAME_LENGTH = 22
+USERNAME_RESTRICTION = "[a-zA-Z0-9]+"
+MIN_PASSWORD_LENGTH = 1
+
 session_key = None
 
 WORKING_DIR = Path(__file__).parent

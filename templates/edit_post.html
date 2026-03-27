@@ -10,7 +10,8 @@
   <form action="/edit" method="post">
     <p>
       Titel: <br />
-      <input type="text" name="title" value="{{ post.title }}"/>
+      <input type="text" name="title" value="{{ post.title }}" 
+      maxlength="{{ title_max }}" required/>
     </p>
     <p>
       Sov du gott? <br />
@@ -26,7 +27,9 @@
     </p>
     <p>
       Vad drömde du om? <br />
-      <textarea name="dream" rows="10" cols="64">{{ post.dream }}</textarea>
+      <textarea name="dream" rows="10" cols="64" maxlength="{{ dream_max }}">
+        {{ post.dream }}
+      </textarea>
     </p>
     <input type="hidden" name="post_id" value="{{ post.pid }}" />
     <input type="submit" value="Uppdatera" />

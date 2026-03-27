@@ -1,7 +1,9 @@
 from flask import Flask
 from flask import render_template, session
 from flask import abort, request, redirect
+
 import sqlite3
+import re
 
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
@@ -36,7 +38,10 @@ def display_post(post_id):
 def new_post():
     if not logged_in():
         abort(403)
-    return render_template("draft.html")
+
+    return render_template("draft.html",
+        title_max=config.MAX_TITLE_LENGTH,
+        dream_max=config.MAX_DREAM_LENGTH)
 
 @app.route("/publish", methods=["POST"])
 def publish():
@@ -47,6 +52,11 @@ def publish():
     title = request.form["title"]
     quality = request.form["sleep_quality"]
     dream = request.form["dream"]
+    
+    if len(title) < 1 or len(title) > config.MAX_TITLE_LENGTH:
+        abort(403)
+    if len(dream) > config.MAX_DREAM_LENGTH:
+        abort(403)
 
     posts.add(user_id, title, quality, dream)
 
@@ -62,7 +72,9 @@ def edit_post(pid):
     if post["uid"] != session["user_id"]:
         abort(403)
 
-    return render_template("edit_post.html", post=post)
+    return render_template("edit_post.html", post=post,
+        title_max=config.MAX_TITLE_LENGTH,
+        dream_max=config.MAX_DREAM_LENGTH)
 
 @app.route("/edit", methods=["POST"])
 def edit():
@@ -78,6 +90,11 @@ def edit():
     title = request.form["title"]
     quality = request.form["sleep_quality"]
     dream = request.form["dream"]
+
+    if len(title) < 1 or len(title) > config.MAX_TITLE_LENGTH:
+        abort(403)
+    if len(dream) > config.MAX_DREAM_LENGTH:
+        abort(403)
 
     posts.update(pid, title, quality, dream)
     return redirect(f"post/{pid}")
@@ -116,16 +133,27 @@ def create_user():
     password1 = request.form["password1"]
     password2 = request.form["password2"]
     
+    if len(username) > config.MAX_USERNAME_LENGTH:
+        return "FEL: Användarnamnet är för långt"
+
+    regex = config.USERNAME_RESTRICTION
+    if not re.fullmatch(regex, username) or len(username) < 1:
+        return ("FEL: Användarnamnet får inte innehålla"
+                " specialtecken eller mellanslag")
+
     if password1 != password2:
-        return "ERR: Lösenord olika"
+        return "FEL: Lösenord stämmer inte överens"
     password_hash = generate_password_hash(password1)
+
+    if len(password1) < config.MIN_PASSWORD_LENGTH:
+        return "FEL: Lösenordet är för kort"
 
     try:
         sql = """INSERT INTO Users (username, password_hash)
                  VALUES (?, ?)"""
         db.execute(sql, [username, password_hash])
     except sqlite3.IntegrityError:
-        return "ERR: Användarnamn upptaget"
+        return "FEL: Användarnamnet kan inte användas"
 
     sql = """SELECT id FROM Users WHERE username = ?"""
     user_id = db.query(sql, [username])[0]["id"]
@@ -143,16 +171,20 @@ def login():
     password = request.form["password"]
 
     query = "SELECT id, password_hash FROM Users WHERE username = ?"
-    sql = db.query(query, [username])[0]
-    user_id = sql["id"]
-    password_hash = sql["password_hash"]
+    sql = db.query(query, [username])
+    result = sql[0] if sql else None
+    if not result:
+        abort(404)
+
+    user_id = result["id"]
+    password_hash = result["password_hash"]
 
     if check_password_hash(password_hash, password):
         session["user_id"] = user_id
         session["username"] = username
         return redirect("/")
     else:
-        return "ERR: Fel användarnamn eller lösenord"
+        return "FEL: Fel användarnamn eller lösenord"
 
 @app.route("/logout")
 def logout():
