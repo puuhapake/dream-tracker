@@ -15,6 +15,9 @@ app = Flask(__name__)
 app.secret_key = config.get_session_key()
 db.update_schema()
 
+def logged_in() -> bool:
+    return "user_id" in session
+
 @app.route("/")
 def index():
     published = posts.get()
@@ -31,10 +34,15 @@ def display_post(post_id):
 
 @app.route("/draft")
 def new_post():
+    if not logged_in():
+        abort(403)
     return render_template("draft.html")
 
 @app.route("/publish", methods=["POST"])
 def publish():
+    if not logged_in():
+        abort(403)
+    
     user_id = session["user_id"]
     title = request.form["title"]
     quality = request.form["sleep_quality"]
@@ -46,15 +54,24 @@ def publish():
 
 @app.route("/edit_post/<int:pid>")
 def edit_post(pid):
+    if not logged_in():
+        abort(403)
+
     post = posts.get(pid) or abort(404)
+
     if post["uid"] != session["user_id"]:
         abort(403)
+
     return render_template("edit_post.html", post=post)
 
 @app.route("/edit", methods=["POST"])
 def edit():
+    if not logged_in():
+        abort(403)
+
     pid = request.form["post_id"]
     post = posts.get(int(pid)) or abort(404)
+
     if post["uid"] != session["user_id"]:
         abort(403)
 
@@ -67,6 +84,9 @@ def edit():
 
 @app.route("/delete_post/<int:pid>", methods=["GET", "POST"])
 def delete_post(pid):
+    if not logged_in():
+        abort(403)
+
     post = posts.get(pid) or abort(404)
     if post["uid"] != session["user_id"]:
         abort(403)
@@ -77,6 +97,7 @@ def delete_post(pid):
     if "delete" in request.form:
         posts.delete(pid)
         return redirect("/")
+
     return redirect(f"/post/{pid}")
 
 @app.route("/search")
@@ -135,12 +156,7 @@ def login():
 
 @app.route("/logout")
 def logout():
-    try:
+    if logged_in():
         del session["user_id"]
-    except Exception as ex:
-        print(ex)
-    try: 
         del session["username"]
-    except Exception as ex:
-        print(ex)
     return redirect("/")
