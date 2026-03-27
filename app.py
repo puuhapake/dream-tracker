@@ -26,7 +26,7 @@ def index():
 
 @app.route("/post/<int:post_id>")
 def display_post(post_id):
-    post = posts.get(post_id)
+    post = posts.get(post_id) or abort(404)
     return render_template("display.html", post=post)
 
 @app.route("/draft")
@@ -46,16 +46,16 @@ def publish():
 
 @app.route("/edit_post/<int:pid>")
 def edit_post(pid):
-    post = posts.get(pid)
-    if post["user_id"] != session["user_id"]:
+    post = posts.get(pid) or abort(404)
+    if post["uid"] != session["user_id"]:
         abort(403)
     return render_template("edit_post.html", post=post)
 
 @app.route("/edit", methods=["POST"])
 def edit():
     pid = request.form["post_id"]
-    post = posts.get(pid)
-    if post["user_id"] != session["user_id"]:
+    post = posts.get(int(pid)) or abort(404)
+    if post["uid"] != session["user_id"]:
         abort(403)
 
     title = request.form["title"]
@@ -67,8 +67,8 @@ def edit():
 
 @app.route("/delete_post/<int:pid>", methods=["GET", "POST"])
 def delete_post(pid):
-    post = posts.get(pid)
-    if post["user_id"] != session["user_id"]:
+    post = posts.get(pid) or abort(404)
+    if post["uid"] != session["user_id"]:
         abort(403)
 
     if request.method == "GET":

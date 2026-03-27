@@ -14,7 +14,8 @@ def get(uid=None):
             WHERE p.poster_id = u.id
             ORDER BY p.id DESC"""
         return db.query(query)
-    if isinstance(uid, int):
+    if isinstance(uid, int) or isinstance(uid, str):
+        # TODO better type safety
         query = """
             SELECT u.id uid, p.id pid, 
                    p.title, u.username,
@@ -22,7 +23,8 @@ def get(uid=None):
             FROM Posts p, Users u
             WHERE p.poster_id = u.id
               AND p.id = ?"""
-        return db.query(query, [uid])[0]
+        post = db.query(query, [uid])
+        return post[0] if post else None
     else:
         raise NotImplementedError
 
