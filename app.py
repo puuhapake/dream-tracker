@@ -11,6 +11,8 @@ import re
 import db
 import config
 import posts
+import users
+# import auth
 
 
 app = Flask(__name__)
@@ -32,6 +34,12 @@ def index():
         user_count=posts.user_count(),
         post_count=posts.post_count(),
         posts=published)
+
+@app.route("/user/<int:uid>")
+def user_page(uid):
+    user = users.get(uid) or abort(404)
+    posts = users.posts(uid)
+    return render_template("user_page.html", user=user, posts=posts)
 
 @app.route("/post/<int:post_id>")
 def display_post(post_id):

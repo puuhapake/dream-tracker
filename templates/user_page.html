@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{{ user.username }}</title>
+  <link rel="stylesheet" href="/static/main.css" />
+</head>
+
+<body>
+  <h1>{{ user.username }}</h1>
+  <p>
+    {{ user.username }} har {{ posts | count }} inlägg.
+  </p>
+  <h2>Inlägg</h2>
+  <ul>
+    {% for post in posts %}
+    <li><a href="/post/{{ post.id }}">{{ post.title }}</a></li>
+    {% endfor %}
+  </ul>
+  <p>
+    <a href="/">Tillbaka</a>
+  </p>
+</body>
+
+</html>

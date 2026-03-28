@@ -33,7 +33,7 @@
   <ul>
     {% for post in posts %}
     <li><b><a href="/post/{{ post.id }}">{{ post.title }}</a></b> 
-      av {{ post.username }}</li>
+      av <a href="/user/{{ post.uid }}">{{ post.username }}</a></li>
     {% endfor %}
   </ul>
 </body>
