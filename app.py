@@ -2,9 +2,6 @@ from flask import Flask
 from flask import render_template, session
 from flask import abort, request, redirect
 
-from werkzeug.security import generate_password_hash
-from werkzeug.security import check_password_hash
-
 import sqlite3
 import re
 
@@ -155,20 +152,14 @@ def create_user():
 
     if password1 != password2:
         return "FEL: Lösenord stämmer inte överens"
-    password_hash = generate_password_hash(password1)
 
     if len(password1) < config.MIN_PASSWORD_LENGTH:
         return "FEL: Lösenordet är för kort"
 
     try:
-        sql = """INSERT INTO Users (username, password_hash)
-                 VALUES (?, ?)"""
-        db.execute(sql, [username, password_hash])
+        user_id = users.register(username, password1)
     except sqlite3.IntegrityError:
         return "FEL: Användarnamnet kan inte användas"
-
-    sql = """SELECT id FROM Users WHERE username = ?"""
-    user_id = db.query(sql, [username])[0]["id"]
 
     session["user_id"] = user_id 
     session["username"] = username
@@ -182,16 +173,14 @@ def login():
     username = request.form["username"]
     password = request.form["password"]
 
-    query = "SELECT id, password_hash FROM Users WHERE username = ?"
-    sql = db.query(query, [username])
-    result = sql[0] if sql else None
+    result = users.login(username, password)
     if not result:
-        abort(404)
+        abort(403)
 
     user_id = result["id"]
     password_hash = result["password_hash"]
 
-    if check_password_hash(password_hash, password):
+    if users.authenticate(password_hash, password):
         session["user_id"] = user_id
         session["username"] = username
         return redirect("/")
