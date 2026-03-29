@@ -51,6 +51,7 @@ def delete(pid):
     """Removes a post from the database."""
     db.execute("DELETE FROM Posts WHERE id = ?", [pid])
 
+# TODO better filter handling
 def find(query, quality=""):
     """Finds a post whose title or content contains the given query."""
     ex = f"%{query}%"

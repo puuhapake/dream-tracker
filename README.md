@@ -1,8 +1,8 @@
 # dream-tracker
 En enkel social plattform för att mäta och dokumentera sömnkvalitet samt de dynamiska scenerna som eventuellt uppstår under drömsömn.
 
-[Dokumentaatio on myös saatavilla suomeksi](README.fin.md).
-[Documentation also available in English](README.eng.md).
+[Dokumentaatio on myös saatavilla suomeksi](/docs/README.fin.md).
+[Documentation also available in English](/docs/README.eng.md).
 
 ## Funktioner
 Användare kan
