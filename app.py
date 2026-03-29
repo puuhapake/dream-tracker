@@ -30,6 +30,8 @@ db.update_schema()
 - Wider user- and post-specific statistics
 - List collections, e.g. "Premonitions", "Nightmares", 
     "Sleepover", "Memories" et cetera
+- Basic localizations (site language) + dark user interface
+- Clean stylesheets
 ''' # pylint: enable=W0105
 
 def logged_in() -> bool:
