@@ -22,7 +22,7 @@ def join_date(user_id, time=""):
     time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
     return time.strftime("%d/%m/%Y")
 
-def posts(uid):
+def posts(user_id):
     """Retrieves all posts published by a user with the given uid."""
     query = """
         SELECT id, title
