@@ -68,10 +68,9 @@ def display_post(post_id):
     comments = posts.get_comments(post_id)
     likes = posts.get_likes(post_id)
 
-    user_id = session["user_id"]
-
     is_liked = False
-    if user_id:
+    if "user_id" in session:
+        user_id = session["user_id"]
         is_liked = users.has_liked(user_id, post_id)
 
     return render_template(
