@@ -48,7 +48,20 @@ def show_lines(content):
 
 @app.route("/")
 def index():
-    published = posts.get()
+    n = config.MAX_PREVIEW_LENGTH
+    published = []
+
+    for post in posts.get():
+        post = dict(post)
+        dream = post["dream"] or ""
+
+        if len(dream) > config.MAX_PREVIEW_LENGTH:
+            post["preview"] = f"{dream[:n]}..."
+        else:
+            post["preview"] = dream
+
+        published.append(post)
+            
     return render_template(
         "index.html", 
         user_count=posts.user_count(),

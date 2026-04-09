@@ -13,7 +13,8 @@ def get(user_id=None):
     """
     if user_id is None:
         query = """
-            SELECT p.id, p.title, u.username, u.id user_id
+            SELECT p.id, p.title, p.dream dream,
+                   u.username, u.id user_id
             FROM Posts p, Users u
             WHERE p.poster_id = u.id
             ORDER BY p.id DESC"""
