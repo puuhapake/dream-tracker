@@ -3,11 +3,10 @@
 {% block title %}Sömnapp &mdash; Framsida{% endblock %}
 {% block content %}
 
-<p>
+<div class="index">
   Det finns {{ user_count }} användare 
   och {{ post_count }} inlägg. <br>
-<a href="/search">Sök efter inlägg</a>
-</p>
+  <a href="/search">Sök efter inlägg</a>
 
 <p><select name="filter">
   <option value="new">Nyaste</option>

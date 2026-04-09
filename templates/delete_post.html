@@ -3,7 +3,10 @@
 {% block title %}Radera inlägg{% endblock %}
 {% block content %}
 
-<h2>Radera inlägget <i>{{ post.title }}</i>?</h2>
+<h2>
+  Radera inlägget <a class="title_link" 
+  href="/post/{{ post.post_id }}">{{ post.title }}</a>?
+</h2>
 <p>
   Är du säker att du vill radera ditt inlägg?<br>
   Detta kan inte ångras senare.

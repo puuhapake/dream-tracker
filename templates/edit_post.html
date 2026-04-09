@@ -3,7 +3,7 @@
 {% block title %}Redigera inlägg{% endblock %}
 {% block content %}
 
-<h2>Redigera</h2>
+<h2>Redigera <a class="title_link" href="/post/{{ post.post_id }}">{{ post.title }}</a></h2>
 <form action="/edit" method="post">
   <p>
     Titel: <br />
