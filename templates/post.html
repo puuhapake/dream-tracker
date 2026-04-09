@@ -20,6 +20,7 @@ av <a href="/user/{{ post.user_id }}">{{ post.username }}</a>
 
 <form action="/like" method="post">
   <input type="hidden" name="post_id" value="{{ post.post_id }}" />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" name="toggle_like" 
     value="{{ 'Ogilla' if is_liked else 'Gilla' }}" />
   {{ likes | count }} användare gillar detta
@@ -31,6 +32,7 @@ av <a href="/user/{{ post.user_id }}">{{ post.username }}</a>
   placeholder="Kommentera något..." required></textarea> 
   <br />
   <input type="hidden" name="post_id" value="{{ post.post_id }}" />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" name="submit" value="Publicera" />
 </form>
 {% if comments %}

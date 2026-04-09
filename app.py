@@ -40,6 +40,12 @@ db.update_schema()
 def logged_in() -> bool:
     return "user_id" in session
 
+def check_csrf() -> bool:
+    if "csrf_token" not in request.form:
+        abort(403)
+    if request.form["csrf_token"] != session["csrf_token"]:
+        abort(403)
+
 @app.template_filter()
 def show_lines(content):
     content = str(escape(content))
@@ -113,6 +119,7 @@ def new_post():
 
 @app.route("/publish", methods=["POST"])
 def publish():
+    check_csrf()
     if not logged_in():
         abort(401, "Du måste vara inloggad.")
     
@@ -132,6 +139,7 @@ def publish():
 
 @app.route("/like", methods=["POST"])
 def like():
+    check_csrf()
     if not logged_in():
         abort(401, "Du måste vara inloggad.")
 
@@ -150,6 +158,7 @@ def like():
 
 @app.route("/comment", methods=["POST"])
 def comment():
+    check_csrf()
     if not logged_in():
         abort(401, "Du måste vara inloggad.")
 
@@ -180,6 +189,7 @@ def edit_post(post_id):
 
 @app.route("/edit", methods=["POST"])
 def edit():
+    check_csrf()
     if not logged_in():
         abort(401, "Du måste vara inloggad.")
 
@@ -214,6 +224,7 @@ def delete_post(post_id):
         return render_template("delete_post.html", post=post)
 
     if "delete" in request.form:
+        check_csrf()
         posts.delete(post_id)
         return redirect("/")
 
@@ -267,6 +278,7 @@ def create_user():
 
     session["user_id"] = user_id 
     session["username"] = username
+    session["csrf_token"] = config.csrf_token()
     return redirect("/")
 
 @app.route("/login", methods=["GET", "POST"])
@@ -287,6 +299,7 @@ def login():
     if users.authenticate(password_hash, password):
         session["user_id"] = user_id
         session["username"] = username
+        session["csrf_token"] = config.csrf_token()
         return redirect("/")
 
     abort(404, "FEL: Fel användarnamn eller lösenord")

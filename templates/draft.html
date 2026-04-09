@@ -28,6 +28,7 @@
     maxlength="{{ dream_max }}"></textarea>
   </p>
   <input type="submit" value="Publicera" />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
 </form>
 
 {% endblock %}

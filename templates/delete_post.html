@@ -10,8 +10,9 @@
 </p>
 
 <form action="/delete_post/{{ post.post_id }}" method="post">
-  <input type="submit" name="delete" value="Radera">
-  <input type="submit" name="back" value="Ångra">
+  <input type="submit" name="delete" value="Radera" />
+  <input type="submit" name="back" value="Ångra" />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
 </form>
 
 {% endblock %}

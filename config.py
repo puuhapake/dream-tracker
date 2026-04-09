@@ -27,6 +27,9 @@ def get_session_key():
         session_key = key
         return session_key
 
+def csrf_token():
+    return token_hex(24)
+
 def init():
     """Initializes server-side configurations."""
     get_session_key()
