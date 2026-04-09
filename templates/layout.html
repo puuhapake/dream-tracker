@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="/static/main.css" />
+</head>
+
+<body>
+  <div class="nav">
+    <h1><a class="home_icon" href="/">Sömnapp</a></h1>
+    
+    {% if session.user_id %}
+      Välkommen, <b>{{ session.username }}</b>. Sov du gott?
+      <p>
+        <a href="/draft">Nytt inlägg</a> |
+        <a href="/logout">Logga ut</a>
+      </p>
+    {% else %}
+      Vad drömmer du om på natten?
+      <p>
+        <a href="/register">Skapa konto</a> |
+        <a href="/login">Logga in</a>
+      </p>
+    {% endif %}
+  </div>
+
+  {% block content %}{% endblock %}
+</body>
+
+</html>

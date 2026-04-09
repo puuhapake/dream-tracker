@@ -1,49 +1,28 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Sömnapp &mdash; Framsida</title>
-  <link rel="stylesheet" href="/static/main.css" /> 
-</head>
+{% block title %}Sömnapp &mdash; Framsida{% endblock %}
+{% block content %}
 
-<body>
-  {% if session.username %}
-  <h1>Välkommen, {{ session.username }}!</h1>
-  <p>
-    Sov du gott?<br>
-    <a href="/draft">Nytt inlägg</a><br>
-    <a href="/logout">Logga ut</a>
-  </p>
-  {% else %}
-  <h1>Sömnapp</h1>
-  <p>
-    Vad drömmer du om på natten?<br>
-    <a href="/register">Skapa konto</a>
-    <a href="/login">Logga in</a>
-  </p>
-  {% endif %}
+<p>
+  Det finns {{ user_count }} användare 
+  och {{ post_count }} inlägg. <br>
+<a href="/search">Sök efter inlägg</a>
+</p>
 
-  <p>
-    Det finns {{ user_count }} användare 
-    och {{ post_count }} inlägg. <br>
-  <a href="/search">Sök efter inlägg</a>
-  </p>
+<p>
+  <select name="filter">
+    <option value="new">Nyaste</option>
+    <option value="popular">Populära</option>
+    <option value="feed">Vänner</option>
+  </select>
+</p>
 
-  <p>
-    <select name="filter">
-      <option value="new">Nyaste</option>
-      <option value="popular">Populära</option>
-      <option value="feed">Vänner</option>
-    </select>
-  </p>
+<h2></h2>
+<ul>
+  {% for post in posts %}
+  <li><b><a href="/post/{{ post.id }}">{{ post.title }}</a></b> 
+    av <a href="/user/{{ post.user_id }}">{{ post.username }}</a></li>
+  {% endfor %}
+</ul>
 
-  <h2></h2>
-  <ul>
-    {% for post in posts %}
-    <li><b><a href="/post/{{ post.id }}">{{ post.title }}</a></b> 
-      av <a href="/user/{{ post.user_id }}">{{ post.username }}</a></li>
-    {% endfor %}
-  </ul>
-</body>
-
-</html>
+{% endblock %}

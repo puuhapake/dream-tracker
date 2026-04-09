@@ -1,37 +1,33 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Nytt inlägg</title>
-  <link rel="stylesheet" href="/static/main.css" />
-</head>
+{% block title %}Nytt inlägg{% endblock %}
+{% block content %}
 
-<body>
-  <form action="/publish" method="post">
-    <p>
-      Titel: <br />
-      <input type="text" name="title" 
-      maxlength="{{ title_max }}" required/>
-    </p>
-    <p>
-      Sov du gott? <br />
+<h2>Nytt inlägg</h2>
+<form action="/publish" method="post">
+  <p>
+    Titel: <br />
+    <input type="text" name="title" 
+    maxlength="{{ title_max }}" required/>
+  </p>
+  <p>
+    Sov du gott? <br />
 
-      <input type="radio" id="lowq" name="sleep_quality" value="dålig" />
-      <label for="lowq">nej</label> <br />
-      
-      <input type="radio" id="midq" name="sleep_quality" value="meh" />
-      <label for="midq">ok</label> <br />
-      
-      <input type="radio" id="highq" name="sleep_quality" value="bra" />
-      <label for="highq">ja</label> <br />
-    </p>
-    <p>
-      Vad drömde du om? <br />
-      <textarea name="dream" rows="10" cols="64" 
-      maxlength="{{ dream_max }}"></textarea>
-    </p>
-    <input type="submit" value="Publicera" />
-  </form>
-</body>
+    <input type="radio" id="lowq" name="sleep_quality" value="dålig" />
+    <label for="lowq">nej</label> <br />
+    
+    <input type="radio" id="midq" name="sleep_quality" value="meh" />
+    <label for="midq">ok</label> <br />
+    
+    <input type="radio" id="highq" name="sleep_quality" value="bra" />
+    <label for="highq">ja</label> <br />
+  </p>
+  <p>
+    Vad drömde du om? <br />
+    <textarea name="dream" rows="10" cols="64" 
+    maxlength="{{ dream_max }}"></textarea>
+  </p>
+  <input type="submit" value="Publicera" />
+</form>
 
-</html>
+{% endblock %}

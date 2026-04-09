@@ -1,54 +1,51 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>{{ post.title }}</title>
-  <link rel="stylesheet" href="/static/main.css" />
-</head>
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
 
-<body>
-  <h2>{{ post.title }}</h2> 
-  <i>av </i><a href="/user/{{ post.user_id }}">{{ post.username }}</a>
-  <p>Sömnkvalitet: {{ post.sleep_quality }}</p>
-  <p>{{ post.dream }}</p>
-  {% if session.user_id == post.user_id %}
-  <p>
-    <a href="/edit_post/{{ post.post_id }}">Redigera</a>
-    <a href="/delete_post/{{ post.post_id }}">Radera</a>
-  </p>
-  {% endif %}
-  
-  <form action="/like" method="post">
-    <input type="hidden" name="post_id" value="{{ post.post_id }}" />
-    <input type="submit" name="toggle_like" 
-      value="{{ 'Ogilla' if is_liked else 'Gilla' }}" />
-    {{ likes | count }} användare gillar detta
-  </form>
+<h2>{{ post.title }}</h2> 
+av <a href="/user/{{ post.user_id }}">{{ post.username }}</a>
 
-  <h3>Kommentar</h3>
-  <form action="/comment" method="post">
-    <textarea name="comment" rows="1" cols="45" maxlength="320"
-    placeholder="Kommentera något..." required></textarea> 
-    <br />
-    <input type="hidden" name="post_id" value="{{ post.post_id }}" />
-    <input type="submit" name="submit" value="Publicera" />
-  </form>
-  {% if comments %}
-    <ul class="comments">
-    {% for comment in comments %}
-      <li>
-        <b><a href="/user/{{ comment.user_id }}">
-          {{ comment.username }}</a></b>: 
-        {{ comment.content }}
-      </li>
-    {% endfor %}
-    </ul>
-  {% else %}
-  <p>
-    Inga kommentar ännu...
-  </p>
-  {% endif %}
-  <br /><a href="/">Tillbaka</a>
-</body>
+<p>Sömnkvalitet: {{ post.sleep_quality }}</p>
+<p>{{ post.dream }}</p>
 
-</html>
+{% if session.user_id == post.user_id %}
+<p>
+  <a href="/edit_post/{{ post.post_id }}">Redigera</a>
+  <a href="/delete_post/{{ post.post_id }}">Radera</a>
+</p>
+{% endif %}
+
+<form action="/like" method="post">
+  <input type="hidden" name="post_id" value="{{ post.post_id }}" />
+  <input type="submit" name="toggle_like" 
+    value="{{ 'Ogilla' if is_liked else 'Gilla' }}" />
+  {{ likes | count }} användare gillar detta
+</form>
+
+<h3>Kommentar</h3>
+<form action="/comment" method="post">
+  <textarea name="comment" rows="1" cols="45" maxlength="320"
+  placeholder="Kommentera något..." required></textarea> 
+  <br />
+  <input type="hidden" name="post_id" value="{{ post.post_id }}" />
+  <input type="submit" name="submit" value="Publicera" />
+</form>
+{% if comments %}
+  <ul class="comments">
+  {% for comment in comments %}
+    <li>
+      <b><a href="/user/{{ comment.user_id }}">
+        {{ comment.username }}</a></b>: 
+      {{ comment.content }}
+    </li>
+  {% endfor %}
+  </ul>
+{% else %}
+<p>
+  Inga kommentar ännu...
+</p>
+{% endif %}
+<br /><a href="/">Tillbaka</a>
+
+{% endblock %}

@@ -1,27 +1,23 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Registrera</title>
-    <link rel="stylesheet" href="/static/main.css" />
-  </head>
+{% extends "layout.html" %}
 
-  <body>
-    <form action="/create_user" method="post">
-      <p>
-        Användarnamn: <br />
-        <input type="text" name="username" maxlength="{{ username_max }}" 
-        pattern="[a-zA-Z0-9]+" required/>
-      </p>
-      <p>
-        Lösenord: <br />
-        <input type="password" name="password1" required />
-      </p>
-      <p>
-        Lösenord igen: <br />
-        <input type="password" name="password2" required />
-      </p>
-      <input type="submit" value="Skapa" />
-    </form>
-  </body>
+{% block title %}Registrera{% endblock %}
+{% block content %}
 
-</html>
+<form action="/create_user" method="post">
+  <p>
+    Användarnamn: <br />
+    <input type="text" name="username" maxlength="{{ username_max }}" 
+    pattern="[a-zA-Z0-9]+" required/>
+  </p>
+  <p>
+    Lösenord: <br />
+    <input type="password" name="password1" required />
+  </p>
+  <p>
+    Lösenord igen: <br />
+    <input type="password" name="password2" required />
+  </p>
+  <input type="submit" value="Skapa" />
+</form>
+
+{% endblock %}

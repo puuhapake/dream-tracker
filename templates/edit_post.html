@@ -1,40 +1,34 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Redigera inlägg</title>
-  <link rel="stylesheet" href="/static/main.css" />
-</head>
+{% block title %}Redigera inlägg{% endblock %}
+{% block content %}
 
-<body>
-  <h2>Redigera</h2>
-  <form action="/edit" method="post">
-    <p>
-      Titel: <br />
-      <input type="text" name="title" value="{{ post.title }}" 
-      maxlength="{{ title_max }}" required/>
-    </p>
-    <!-- TODO: Auto-select previous radio option -->
-    <p>
-      Sov du gott? <br />
+<h2>Redigera</h2>
+<form action="/edit" method="post">
+  <p>
+    Titel: <br />
+    <input type="text" name="title" value="{{ post.title }}" 
+    maxlength="{{ title_max }}" required/>
+  </p>
+  <!-- TODO: Auto-select previous radio option -->
+  <p>
+    Sov du gott? <br />
 
-      <input type="radio" id="lowq" name="sleep_quality" value="dålig" />
-      <label for="lowq">nej</label> <br />
-      
-      <input type="radio" id="midq" name="sleep_quality" value="meh" />
-      <label for="midq">ok</label> <br />
-      
-      <input type="radio" id="highq" name="sleep_quality" value="bra" />
-      <label for="highq">ja</label> <br />
-    </p>
-    <p>
-      Vad drömde du om? <br />
-      <textarea name="dream" rows="10" cols="64" 
-      maxlength="{{ dream_max }}">{{ post.dream }}</textarea>
-    </p>
-    <input type="hidden" name="post_id" value="{{ post.post_id }}" />
-    <input type="submit" value="Uppdatera" />
-  </form>
-</body>
-
-</html>
+    <input type="radio" id="lowq" name="sleep_quality" value="dålig" />
+    <label for="lowq">nej</label> <br />
+    
+    <input type="radio" id="midq" name="sleep_quality" value="meh" />
+    <label for="midq">ok</label> <br />
+    
+    <input type="radio" id="highq" name="sleep_quality" value="bra" />
+    <label for="highq">ja</label> <br />
+  </p>
+  <p>
+    Vad drömde du om? <br />
+    <textarea name="dream" rows="10" cols="64" 
+    maxlength="{{ dream_max }}">{{ post.dream }}</textarea>
+  </p>
+  <input type="hidden" name="post_id" value="{{ post.post_id }}" />
+  <input type="submit" value="Uppdatera" />
+</form>
+{% endblock %}

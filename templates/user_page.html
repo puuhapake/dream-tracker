@@ -1,51 +1,46 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>{{ user.username }}</title>
-  <link rel="stylesheet" href="/static/main.css" />
-</head>
+{% block title %}{{ user.username }} profil{% endblock %}
+{% block content %}
 
-<body>
-  <h1>{{ user.username }}</h1>
-  <p>Användare sedan {{ time }}</p>
-  <p>
-    {{ user.username }} har {{ posts | count }} inlägg.
-  </p>
-  <h2>Inlägg</h2>
+<h2>{{ user.username }} profil</h2>
+<p>Användare sedan {{ time }}.</p>
+<p>
+  {{ user.username }} har {{ posts | count }} inlägg.
+</p>
+<h3>Inlägg</h3>
+<ul>
+  {% for post in posts %}
+  <li><a href="/post/{{ post.id }}">{{ post.title }}</a></li>
+  {% endfor %}
+</ul>
+
+<h4>Gillade inlägg</h4>
+{% if likes %}
+<ul>
+  {% for liked in likes %}
+  <li><a href="/post/{{ liked.post_id }}">{{ liked.title }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+  Inga gillade inlägg.
+{% endif %}
+
+<h4>Kommentar</h4>
+{% if comments %}
   <ul>
-    {% for post in posts %}
-    <li><a href="/post/{{ post.id }}">{{ post.title }}</a></li>
+    {% for comment in comments %}
+    <li>
+      <a href="/post/{{ comment.post_id }}">{{ comment.post_title }}</a>: 
+      {{ comment.content }}
+    </li>
     {% endfor %}
   </ul>
+{% else %}
+  Inga kommentar.
+{% endif %}
+<p>
+  <a href="/">Tillbaka</a>
+</p>
 
-  <h3>Gillade inlägg</h3>
-  {% if likes %}
-  <ul>
-    {% for liked in likes %}
-    <li><a href="/post/{{ liked.post_id }}">{{ liked.title }}</a></li>
-    {% endfor %}
-  </ul>
-  {% else %}
-    Inga gillade inlägg.
-  {% endif %}
-
-  <h3>Kommentar</h3>
-  {% if comments %}
-    <ul>
-      {% for comment in comments %}
-      <li>
-        <a href="/post/{{ comment.post_id }}">{{ comment.post_title }}</a>: 
-        {{ comment.content }}
-      </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    Inga kommentar.
-  {% endif %}
-  <p>
-    <a href="/">Tillbaka</a>
-  </p>
-</body>
-
-</html>
+{% endblock %}

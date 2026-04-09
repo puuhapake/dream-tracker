@@ -1,21 +1,17 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Radera inlägget</title>
-  <link rel="stylesheet" href="/static/main.css" />
-</head>
+{% block title %}Radera inlägg{% endblock %}
+{% block content %}
 
-<body>
-  <h1>Radera inlägget {{ post.title }}</h1>
-  <p>
-    Är du säker att du vill radera detta inlägg?<br>
-    Detta kan inte ångras senare.
-  </p>
-  <form action="/delete_post/{{ post.post_id }}" method="post">
-    <input type="submit" name="delete" value="Radera">
-    <input type="submit" name="back" value="Ångra">
-  </form>
-</body>
+<h2>Radera inlägget <i>{{ post.title }}</i>?</h2>
+<p>
+  Är du säker att du vill radera ditt inlägg?<br>
+  Detta kan inte ångras senare.
+</p>
 
-</html>
+<form action="/delete_post/{{ post.post_id }}" method="post">
+  <input type="submit" name="delete" value="Radera">
+  <input type="submit" name="back" value="Ångra">
+</form>
+
+{% endblock %}
