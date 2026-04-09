@@ -31,14 +31,27 @@ def posts(user_id):
         ORDER BY id DESC"""
     return db.query(query, [user_id])
 
+def get_comments(user_id):
+    """Retrieves all comments published by the given user ID."""
+    query = """
+        SELECT p.id post_id, p.title post_title, 
+               c.content
+        FROM Comments c
+        JOIN Posts p ON c.post_id = p.id
+        JOIN Users u ON c.user_id = u.id
+        WHERE c.user_id = ?
+        ORDER BY c.id DESC"""
+    return db.query(query, [user_id])
+
 def get_likes(user_id):
-    """Retrieves all posts liked by the user."""
+    """Retrieves all posts liked by the given user ID."""
     query = """
         SELECT p.id post_id, p.title, u.username username
         FROM Likes l 
         JOIN Posts p ON l.post_id = p.id
         JOIN Users u ON u.id = p.poster_id
-        WHERE l.user_id = ?"""
+        WHERE l.user_id = ?
+        ORDER BY l.id DESC"""
     return db.query(query, [user_id])
 
 def has_liked(user_id, post_id):

@@ -52,13 +52,15 @@ def user_page(user_id):
     posts = users.posts(user_id)
     time = users.join_date(user_id, user["created_at"])
     likes = users.get_likes(user_id)
+    comments = users.get_comments(user_id)
 
     return render_template(
         "user_page.html", 
         user=user, 
         posts=posts,
         time=time,
-        likes=likes)
+        likes=likes,
+        comments=comments)
 
 @app.route("/post/<int:post_id>")
 def display_post(post_id):

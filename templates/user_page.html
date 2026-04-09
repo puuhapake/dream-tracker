@@ -18,6 +18,7 @@
     <li><a href="/post/{{ post.id }}">{{ post.title }}</a></li>
     {% endfor %}
   </ul>
+
   <h3>Gillade inlägg</h3>
   {% if likes %}
   <ul>
@@ -27,6 +28,20 @@
   </ul>
   {% else %}
     Inga gillade inlägg.
+  {% endif %}
+
+  <h3>Kommentar</h3>
+  {% if comments %}
+    <ul>
+      {% for comment in comments %}
+      <li>
+        <a href="/post/{{ comment.post_id }}">{{ comment.post_title }}</a>: 
+        {{ comment.content }}
+      </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    Inga kommentar.
   {% endif %}
   <p>
     <a href="/">Tillbaka</a>
