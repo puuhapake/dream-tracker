@@ -115,12 +115,14 @@ def user_page(username):
 @app.route("/follow/<int:user_id>")
 def follow(user_id):
     toggle_follow(user_id, True)
-    return redirect(f"/user/{user_id}")
+    username = users.get(user_id)["username"]
+    return redirect(f"/user/{username}")
 
 @app.route("/unfollow/<int:user_id>")
 def unfollow(user_id):
     toggle_follow(user_id, False)
-    return redirect(f"/user/{user_id}")
+    username = users.get(user_id)["username"]
+    return redirect(f"/user/{username}")
 
 def toggle_follow(user_id, toggle):
     if not logged_in():
