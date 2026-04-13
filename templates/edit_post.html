@@ -16,14 +16,8 @@
   <p>
     Sov du gott? <br />
 
-    <input type="radio" id="lowq" name="sleep_quality" value="dålig" />
-    <label for="lowq">nej</label> <br />
-    
-    <input type="radio" id="midq" name="sleep_quality" value="meh" />
-    <label for="midq">ok</label> <br />
-    
-    <input type="radio" id="highq" name="sleep_quality" value="bra" />
-    <label for="highq">ja</label> <br />
+    <input type="range" id="sleep_quality" name="sleep_quality"
+    min="1" max="5" step="1" value="{{ post.sleep_quality }}">
   </p>
   <p>
     Vad drömde du om? <br />

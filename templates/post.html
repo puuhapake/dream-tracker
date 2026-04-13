@@ -7,7 +7,7 @@
 <h2>{{ post.title }}</h2> 
 av <a href="/user/{{ post.user_id }}">{{ post.username }}</a>
 
-<p><b>Sömnkvalitet</b>: {{ post.sleep_quality }}</p>
+<p><b>Sömnkvalitet</b>: {{ quality }}</p>
 <p>{{ post.dream | show_lines }}</p>
 
 {% if session.user_id == post.user_id %}

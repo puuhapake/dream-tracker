@@ -136,6 +136,7 @@ def display_post(post_id):
     post = posts.get(post_id) or abort(404, "Inlägget hittades inte.")
     comments = posts.get_comments(post_id)
     likes = posts.get_likes(post_id)
+    quality = sleep_emoticon(post["sleep_quality"])
 
     is_liked = False
     if "user_id" in session:
@@ -147,7 +148,23 @@ def display_post(post_id):
         post=post, 
         comments=comments,
         is_liked=is_liked,
-        likes=likes)
+        likes=likes,
+        quality=quality)
+
+def sleep_emoticon(value):
+    match int(value):
+        case 5:
+            return ":D"
+        case 4:
+            return ":)"
+        case 3:
+            return ":/"
+        case 2:
+            return ":("
+        case 1:
+            return ":C"
+        case _:
+            return None
 
 @app.route("/draft")
 def new_post():
@@ -282,7 +299,7 @@ def search():
         results = posts.find(query, quality_filter)
     else:
         results = []
-    print(results)
+
     return render_template("search.html", 
         q=query, 
         filter=quality_filter,
