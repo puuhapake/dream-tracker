@@ -7,7 +7,7 @@ CREATE TABLE Users (
 
 CREATE TABLE Posts (
     id INTEGER PRIMARY KEY,
-    poster_id INTEGER REFERENCES Users(id),
+    user_id INTEGER REFERENCES Users(id),
     title TEXT,
     sleep_quality INTEGER,
     dream TEXT,

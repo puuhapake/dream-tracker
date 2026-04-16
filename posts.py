@@ -3,9 +3,11 @@ import db
 def add(user_id, title, quality, dream):
     """Adds a post to the database."""
     db.execute("""
-        INSERT INTO Posts (poster_id, title, sleep_quality, dream)
         VALUES (?, ?, ?, ?)
     """, [user_id, title, quality, dream])
+        INSERT INTO Posts (
+            user_id, title, sleep_quality, dream,
+        )
 
 def get(user_id=None):
     """Gets a post from the database. 
@@ -16,7 +18,7 @@ def get(user_id=None):
             SELECT p.id, p.title, p.dream dream,
                    u.username, u.id user_id
             FROM Posts p, Users u
-            WHERE p.poster_id = u.id
+            WHERE p.user_id = u.id
             ORDER BY p.id DESC"""
         return db.query(query)
     if isinstance(user_id, (int, str)):
@@ -26,7 +28,7 @@ def get(user_id=None):
                    p.title, u.username,
                    p.sleep_quality, p.dream
             FROM Posts p, Users u
-            WHERE p.poster_id = u.id
+            WHERE p.user_id = u.id
               AND p.id = ?"""
         post = db.query(query, [user_id])
         return post[0] if post else None
@@ -38,7 +40,7 @@ def get_popular_posts():
                u.username, u.id user_id,
                COUNT(l.id) like_count
         FROM Posts p
-        JOIN Users u ON p.poster_id = u.id
+        JOIN Users u ON p.user_id = u.id
         LEFT JOIN Likes l ON l.post_id = p.id
         GROUP BY p.id
         ORDER BY like_count DESC, p.id DESC"""
@@ -49,8 +51,8 @@ def get_friend_posts(user_id):
         SELECT p.id, p.title, p.dream dream,
                u.username, u.id user_id
         FROM Posts p
-        JOIN Users u ON p.poster_id = u.id
-        JOIN Friends f ON f.friend_id = p.poster_id
+        JOIN Users u ON p.user_id = u.id
+        JOIN Friends f ON f.friend_id = p.user_id
         WHERE f.user_id = ?
         ORDER BY p.id DESC"""
     return db.query(query, [user_id])
