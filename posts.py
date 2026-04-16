@@ -1,13 +1,18 @@
 import db
 
-def add(user_id, title, quality, dream):
+def add(user_id, title, quality, dream, visibility, 
+        bedtime, delay, sleep_type):
     """Adds a post to the database."""
     db.execute("""
-        VALUES (?, ?, ?, ?)
-    """, [user_id, title, quality, dream])
         INSERT INTO Posts (
             user_id, title, sleep_quality, dream,
+            visibility, bedtime, sleep_delay, sleep_type
         )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    """, [
+        user_id, title, quality, dream, visibility,
+        bedtime, delay, sleep_type
+    ])
 
 def get(user_id=None):
     """Gets a post from the database. 

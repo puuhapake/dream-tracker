@@ -171,13 +171,33 @@ def publish():
     title = request.form["title"]
     quality = request.form["sleep_quality"]
     dream = request.form["dream"]
-    
+
+    visibility = request.form["visibility"]
+    sleep_type = request.form["type"]
+
+    # bedtime_hour = request.form["bedtime-h"] or 0 
+    # bedtime_min = request.form["bedtime-m"] or 0
+    bedtime = "00:00"
+
+    # delay_hour = int(request.form["delay-h"]) or 0
+    # delay_min = int(request.form["delay-m"]) or 0
+    # delay = delay_hour * 60 + delay_min
+    delay = 0
+
+    # tags = set()
+    # for t in request.form["tags"].split(","):
+    #     tags.add(t.strip())
+
     if len(title) < 1 or len(title) > config.MAX_TITLE_LENGTH:
         abort(403, "Titeln har fel längd")
     if len(dream) > config.MAX_DREAM_LENGTH:
         abort(403, "Texten är för lång")
 
-    posts.add(user_id, title, quality, dream)
+    posts.add(
+        user_id, title, quality, dream,
+        visibility, bedtime, delay,
+        sleep_type
+        )
 
     return redirect("/")
 

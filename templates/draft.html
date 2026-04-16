@@ -4,24 +4,94 @@
 {% block content %}
 
 <div class="page"> <div class="page_context">
+
 <h2>Nytt inlägg</h2>
+
 <form action="/publish" method="post">
   <p>
     Titel: <br />
     <input type="text" name="title" 
     maxlength="{{ title_max }}" required/>
   </p>
+
   <p>
     Sov du gott? <br />
 
     <input type="range" id="sleep_quality" name="sleep_quality"
     min="1" max="5" step="1">
   </p>
+
   <p>
     Vad drömde du om? <br />
     <textarea name="dream" rows="10" cols="64" 
     maxlength="{{ dream_max }}"></textarea>
   </p>
+
+  <p>
+    Synlighet
+    <select name="visibility">
+      <option value="public" selected>Offentlig</option>
+      <option value="private">Privat</option>
+      <option value="friends-only">Vänner</option>
+    </select>
+  </p>
+  
+  <h3>NYI/DNT</h3>
+  The following features have not been implemented or tested fully.
+  They are subject to extreme changes in the near future.
+  
+  <p>
+    Jag lade mig klockan
+
+    <select name="bedtime-h">
+    {% for i in range(24) %}
+      <option value="{{i}}">{{ "%02d" | format(i) }}</option>
+    {% endfor %}
+    </select>
+    :
+    <select name="bedtime-m">
+      {% for i in range(60) %}
+      <option value="{{i}}">{{ "%02d" | format(i) }}</option>
+      {% endfor %}
+    </select>
+  </p>
+
+  <p>
+    Det tog mig
+    
+    <select name="delay-h">
+    {% for i in range(13) %}
+      <option value="{{i}}">{{ "%02d" | format(i) }}</option>
+    {% endfor %}
+    </select> h 
+    
+    <select name="delay-m">
+      {% for i in range(0, 60, 5) %}
+      <option value="{{i}}">{{ "%02d" | format(i) }}</option>
+      {% endfor %}
+    </select> m
+    att få sömn
+  </p>
+
+  <p>
+    Sömntyp
+    <select name="type">
+      <option value="undefined">(annan)</option>
+      <option value="core">Huvudsömn</option>
+      <option value="nap">Tupplur</option>
+      <option value="daydream">Fantasi</option>
+      <option value="rest">Vila</option>
+    </select>
+  </p>
+
+  <p>
+    Nyckelord
+    <input type="text" name="tags">
+  </p>
+  <p>
+    
+  </p>
+
   <input type="submit" value="Publicera" />
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
 </form>

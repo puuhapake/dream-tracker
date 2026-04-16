@@ -11,11 +11,19 @@ CREATE TABLE Posts (
     title TEXT,
     sleep_quality INTEGER,
     dream TEXT,
+    visibility TEXT,
+    bedtime DATETIME,
+    sleep_delay INTEGER,
+    sleep_type TEXT
     
     CHECK (
         sleep_quality BETWEEN 1 AND 5
-        visibility IN (
+        AND visibility IN (
             "public", "private", "friends-only"
+        )
+        AND sleep_delay BETWEEN 0 AND 775
+        AND sleep_type IN (
+            "undefined", "core", "nap", "daydream", "rest"
         )
     )
 );
