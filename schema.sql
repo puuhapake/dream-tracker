@@ -9,8 +9,15 @@ CREATE TABLE Posts (
     id INTEGER PRIMARY KEY,
     poster_id INTEGER REFERENCES Users(id),
     title TEXT,
-    sleep_quality TEXT,
-    dream TEXT
+    sleep_quality INTEGER,
+    dream TEXT,
+    
+    CHECK (
+        sleep_quality BETWEEN 1 AND 5
+        visibility IN (
+            "public", "private", "friends-only"
+        )
+    )
 );
 
 CREATE TABLE Comments (
