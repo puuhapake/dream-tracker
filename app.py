@@ -319,6 +319,7 @@ def edit():
     title = request.form["title"]
     quality = request.form["sleep_quality"]
     dream = request.form["dream"]
+    visibility = request.form["visibility"]
 
     tags = set()
     for t in request.form["tags"].split(","):

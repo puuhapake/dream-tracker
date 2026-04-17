@@ -31,17 +31,28 @@ def query(sql, params=[]):
     return result
 
 def update_schema():
-    with open("schema.sql") as schema:
-        con = get_connection()
-        sql = schema.read() + "\n"
-        blocks = sql.split("\n\n")
-        
-        debug_message("Initializing database tables...")
-        for block in blocks:
-            try:
-                con.executescript(block)
-            except OperationalError as ex:
-                debug_message(ex, indent=4)
+    debug_message("Initializing database tables...")
+    con = get_connection()
+
+    for block in open_sql("schema.sql"):
+        try:
+            con.executescript(block)
+        except OperationalError as ex:
+            debug_message(ex, indent=4)
+    
+def initialize():
+    con = get_connection()
+    for block in open_sql("init.sql"):
+        try:
+            con.executescript(block)
+        except OperationalError as ex:
+            debug_message(ex, indent=4)
+
+def open_sql(filename):
+    with open(filename, encoding="utf-8") as sql_file:
+        sql = sql_file.read() + "\n"
+        return sql.split("\n\n")
+
 
 def debug_message(message, indent=2):
     print(f"{' '*indent} > {message}")

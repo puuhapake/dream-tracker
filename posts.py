@@ -66,15 +66,16 @@ def get_friend_posts(user_id):
         ORDER BY p.id DESC"""
     return db.query(query, [user_id])
 
-def update(post_id, title, quality, dream):
+def update(post_id, title, quality, dream, visibility):
     """Modifies a post's content."""
     db.execute("""
     UPDATE Posts
     SET title = ?,
         dream = ?,
-        sleep_quality = ?
+        sleep_quality = ?,
+        visibility = ?
     WHERE id = ?
-    """, [title, dream, quality, post_id])
+    """, [title, dream, quality, visibility, post_id])
 
 def delete(post_id):
     """Removes a post from the database."""

@@ -27,6 +27,23 @@
   </p>
   
   <p>
+    Synlighet
+    <select name="visibility">
+      <option value="public" {{ 
+        "selected" if post.visibility == "public" else ""}}
+        >Offentlig</option>
+
+      <option value="private" {{
+        "selected" if post.visibility == "private" else ""}}
+        >Privat</option>
+
+      <option value="friends-only" {{
+        "selected" if post.visibility == "friends-only" else ""}}
+      >Vänner</option>
+    </select>
+  </p>
+  
+  <p>
     Nyckelord
     <input type="text" name="tags" value="{{ tags }}">
   </p>
