@@ -1,3 +1,5 @@
+"""Manages global app configurations."""
+
 from secrets import token_hex
 from pathlib import Path
 
@@ -28,6 +30,7 @@ def get_session_key():
         return session_key
 
 def csrf_token():
+    """Creates a random hex string with 24 random bytes."""
     return token_hex(24)
 
 def init():

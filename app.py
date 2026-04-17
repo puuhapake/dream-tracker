@@ -12,7 +12,7 @@ import db
 import config
 import posts
 import users
-import formatter
+import ezformat
 
 
 app = Flask(__name__)
@@ -32,13 +32,13 @@ def check_csrf() -> bool:
 @app.template_filter()
 def show_lines(content):
     content = str(escape(content))
-    content = formatter.escape(content)
-    
-    content = formatter.set_dashes(content)
-    content = formatter.set_emphs(content)
+    content = ezformat.escape(content)
+
+    content = ezformat.set_dashes(content)
+    content = ezformat.set_emphs(content)
     content = content.replace("\n", "<br />")
 
-    content = formatter.unescape(content)
+    content = ezformat.unescape(content)
     return Markup(content)
 
 @app.route("/")
@@ -82,7 +82,7 @@ def index():
             continue
 
         objs.append(post)
-            
+
     return render_template(
         "index.html", 
         user_count=posts.user_count(),
@@ -93,7 +93,7 @@ def index():
 def user_page(username):
     user_id = users.get_id(username)
     user = users.get(user_id) or abort(404, "Ingen användare hittades.")
-        
+
     tab = request.args.get("tab", "posts")
     time = users.join_date(user_id, user["created_at"])
 
@@ -104,7 +104,7 @@ def user_page(username):
     is_following = False
     if "user_id" in session:
         is_following = users.is_following(
-            follower=session["user_id"], 
+            follower=session["user_id"],
             target_user=user_id)
 
     followers = users.get_followers(user_id)
@@ -117,7 +117,7 @@ def user_page(username):
 
     return render_template(
         "user_page.html", 
-        user=user, 
+        user=user,
         data=data,
         tab=tab,
         posts=posts,
@@ -156,7 +156,7 @@ def display_post(post_id):
     poster_id = post["user_id"]
 
     user_id = None
-    
+
     # TODO - stronger typing, like enum
     # if visibility == "private" and :
     #     abort(403, "Inlägget är inte tillgängligt.")
@@ -174,7 +174,7 @@ def display_post(post_id):
 
     if visibility != "public" and user_id is None:
         abort(403, "Du måste vara inloggad.")
-    
+
     if visibility == "private" and not is_poster:
         abort(403, "Inlägget är inte tillgängligt.")
 
@@ -183,13 +183,13 @@ def display_post(post_id):
 
     comments = posts.get_comments(post_id)
     likes = posts.get_likes(post_id)
-    quality = formatter.to_emoticon(post["sleep_quality"])
+    quality = ezformat.to_emoticon(post["sleep_quality"])
     tags = posts.get_tags(post_id)
     categories = posts.classify(post_id)
 
     return render_template(
         "post.html", 
-        post=post, 
+        post=post,
         comments=comments,
         is_liked=is_liked,
         likes=likes,
@@ -214,7 +214,7 @@ def publish():
     check_csrf()
     if not logged_in():
         abort(401, "Du måste vara inloggad.")
-    
+
     user_id = session["user_id"]
     title = request.form["title"]
     quality = request.form["sleep_quality"]
@@ -356,7 +356,7 @@ def edit():
 
     posts.update(post_id, title, quality, dream, visibility)
     posts.update_categories(post_id, categories)
-    
+
     posts.delete_tags(post_id)
     posts.add_tags(post_id, tags)
 
@@ -393,8 +393,8 @@ def search():
     else:
         results = []
 
-    return render_template("search.html", 
-        q=query, 
+    return render_template("search.html",
+        q=query,
         filter=quality_filter,
         results=results)
 
@@ -427,7 +427,7 @@ def create_user():
     except sqlite3.IntegrityError:
         abort(403, "FEL: Användarnamnet kan inte användas")
 
-    session["user_id"] = user_id 
+    session["user_id"] = user_id
     session["username"] = username
     session["csrf_token"] = config.csrf_token()
     return redirect("/")

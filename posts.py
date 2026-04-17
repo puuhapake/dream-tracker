@@ -7,7 +7,7 @@ def get_categories():
     categories = {c["category"]: [] for c in result}
     for category, choice in result:
         categories[category].append(choice)
-    
+
     return categories
 
 def add(user_id, title, quality, dream, 
@@ -109,7 +109,7 @@ def find(query, quality=""):
                OR dream LIKE ?)
             ORDER BY id DESC
         """, [quality, ex, ex])
-    
+
     return db.query("""
         SELECT id, title
         FROM Posts
