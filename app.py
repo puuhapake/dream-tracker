@@ -17,6 +17,7 @@ import users
 app = Flask(__name__)
 app.secret_key = config.get_session_key()
 db.update_schema()
+db.initialize()
 
 def logged_in() -> bool:
     return "user_id" in session
@@ -171,6 +172,7 @@ def display_post(post_id):
     likes = posts.get_likes(post_id)
     quality = sleep_emoticon(post["sleep_quality"])
     tags = posts.get_tags(post_id)
+    categories = posts.classify(post_id)
 
     return render_template(
         "post.html", 
@@ -179,7 +181,8 @@ def display_post(post_id):
         is_liked=is_liked,
         likes=likes,
         quality=quality,
-        tags=tags)
+        tags=tags,
+        categories=categories)
 
 def sleep_emoticon(value):
     match int(value):
@@ -201,7 +204,10 @@ def new_post():
     if not logged_in():
         abort(401, "Du måste vara inloggad.")
 
+    categories = posts.get_categories()
+
     return render_template("draft.html",
+        categories=categories,
         title_max=config.MAX_TITLE_LENGTH,
         dream_max=config.MAX_DREAM_LENGTH)
 
@@ -217,16 +223,20 @@ def publish():
     dream = request.form["dream"]
 
     visibility = request.form["visibility"]
-    sleep_type = request.form["type"]
+    categories = []
+    for c in request.form.getlist("categories"):
+        if not c:
+            continue
+        cat = c.split(":")
+        categories.append((cat[0], cat[1]))
 
     # bedtime_hour = request.form["bedtime-h"] or 0 
     # bedtime_min = request.form["bedtime-m"] or 0
     bedtime = "00:00"
 
-    # delay_hour = int(request.form["delay-h"]) or 0
-    # delay_min = int(request.form["delay-m"]) or 0
-    # delay = delay_hour * 60 + delay_min
-    delay = 0
+    delay_hour = int(request.form["delay-h"]) or 0
+    delay_min = int(request.form["delay-m"]) or 0
+    delay = delay_hour * 60 + delay_min
 
     # TODO - DRY
     tags = set()
@@ -241,12 +251,13 @@ def publish():
 
     posts.add(
         user_id, title, quality, dream,
-        visibility, bedtime, delay,
-        sleep_type
+        visibility, bedtime, delay
         )
 
     post_id = db.last_insert_id()
     posts.add_tags(post_id, tags)
+
+    posts.update_categories(post_id, categories)
 
     return redirect("/")
 
@@ -298,9 +309,14 @@ def edit_post(post_id):
 
     tags = [tag["tag"] for tag in posts.get_tags(post_id)]
     tags = ", ".join(tags)
+    categories = posts.get_categories()
+
+    post_category = dict(posts.classify(post_id))
 
     return render_template("edit_post.html", post=post,
         tags=tags,
+        categories=categories,
+        post_category=post_category,
         title_max=config.MAX_TITLE_LENGTH,
         dream_max=config.MAX_DREAM_LENGTH)
 
@@ -333,7 +349,15 @@ def edit():
     if len(dream) > config.MAX_DREAM_LENGTH:
         abort(403, "Texten är för lång.")
 
-    posts.update(post_id, title, quality, dream)
+    categories = []
+    for c in request.form.getlist("categories"):
+        if not c:
+            continue
+        cat = c.split(":")
+        categories.append((cat[0], cat[1]))
+
+    posts.update(post_id, title, quality, dream, visibility)
+    posts.update_categories(post_id, categories)
     
     posts.delete_tags(post_id)
     posts.add_tags(post_id, tags)

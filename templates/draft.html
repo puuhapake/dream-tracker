@@ -35,7 +35,25 @@
       <option value="friends-only">Vänner</option>
     </select>
   </p>
-  
+
+  {% for category in categories %}
+  <div class="categories">
+    {{ category }}:
+    <select name="categories">
+      {% for option in categories[category] %}
+        <option value="{{ category }}:{{ option }}">
+          {{ option }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+  {% endfor %}
+
+  <p>
+    Nyckelord
+    <input type="text" name="tags">
+  </p>
+
   <h3>NYI/DNT</h3>
   The following features have not been implemented or tested fully.
   They are subject to extreme changes in the near future.
@@ -71,22 +89,6 @@
       {% endfor %}
     </select> m
     att få sömn
-  </p>
-
-  <p>
-    Sömntyp
-    <select name="type">
-      <option value="undefined">(annan)</option>
-      <option value="core">Huvudsömn</option>
-      <option value="nap">Tupplur</option>
-      <option value="daydream">Fantasi</option>
-      <option value="rest">Vila</option>
-    </select>
-  </p>
-
-  <p>
-    Nyckelord
-    <input type="text" name="tags">
   </p>
   <p>
     

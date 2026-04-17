@@ -14,7 +14,6 @@ CREATE TABLE Posts (
     visibility TEXT,
     bedtime DATETIME,
     sleep_delay INTEGER,
-    sleep_type TEXT
     
     CHECK (
         sleep_quality BETWEEN 1 AND 5
@@ -22,9 +21,6 @@ CREATE TABLE Posts (
             "public", "private", "friends-only"
         )
         AND sleep_delay BETWEEN 0 AND 775
-        AND sleep_type IN (
-            "undefined", "core", "nap", "daydream", "rest"
-        )
     )
 );
 
@@ -51,6 +47,19 @@ CREATE TABLE Friends (
 CREATE TABLE Tags (
     id INTEGER PRIMARY KEY,
     post_id INTEGER REFERENCES Posts(id),
-    tag TEXT,
+    tag TEXT NOT NULL,
     UNIQUE(post_id, tag)
+);
+
+CREATE TABLE Categories (
+    id INTEGER PRIMARY KEY,
+    category TEXT NOT NULL,
+    choice TEXT UNIQUE NOT NULL 
+);
+
+CREATE TABLE PostCategories (
+    id INTEGER PRIMARY KEY,
+    post_id INTEGER REFERENCES Posts(id),
+    category TEXT,
+    choice TEXT
 );

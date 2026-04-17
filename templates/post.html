@@ -7,7 +7,16 @@
 <h2>{{ post.title }}</h2> 
 av <a href="/user/{{ post.username }}">{{ post.username }}</a>
 
-<p><b>Sömnkvalitet</b>: {{ quality }}</p>
+<p></p>
+{% if categories %}
+<div class="categories">
+  {% for cat in categories %}
+    <b>{{ cat.0 }}</b>: {{ cat.1 }}
+  {% endfor %}
+</div>
+{% endif %}
+
+<b>Sömnkvalitet</b>: {{ quality }}
 <p>{{ post.dream | show_lines }}</p>
 
 {% if session.user_id == post.user_id %}

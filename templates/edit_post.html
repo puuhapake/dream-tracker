@@ -43,6 +43,27 @@
     </select>
   </p>
   
+  {% for category in categories %}
+  <div class="categories">
+    {{ category }}:
+    <select name="categories">
+      {% for option in categories[category] %}
+        {% if post_category[category] == option %}
+          <option value="{{ category }}:{{ option }}"
+          selected>
+            {{ option }}
+          </option>
+        {% else %}
+          <option value="{{ category }}:{{ option }}"
+          >
+            {{ option }}
+          </option>
+        {% endif %}
+      {% endfor %}
+    </select>
+  </div>
+  {% endfor %}
+  
   <p>
     Nyckelord
     <input type="text" name="tags" value="{{ tags }}">

@@ -1,17 +1,27 @@
 import db
 
-def add(user_id, title, quality, dream, visibility, 
-        bedtime, delay, sleep_type):
+def get_categories():
+    query = "SELECT category, choice FROM Categories ORDER BY id"
+    result = db.query(query)
+
+    categories = {c["category"]: [] for c in result}
+    for category, choice in result:
+        categories[category].append(choice)
+    
+    return categories
+
+def add(user_id, title, quality, dream, 
+        visibility, bedtime, delay):
     """Adds a post to the database."""
     db.execute("""
         INSERT INTO Posts (
             user_id, title, sleep_quality, dream,
-            visibility, bedtime, sleep_delay, sleep_type
+            visibility, bedtime, sleep_delay
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     """, [
         user_id, title, quality, dream, visibility,
-        bedtime, delay, sleep_type
+        bedtime, delay
     ])
 
 def get(user_id=None):
@@ -80,6 +90,7 @@ def update(post_id, title, quality, dream, visibility):
 def delete(post_id):
     """Removes a post from the database."""
     delete_tags(post_id)
+    db.execute("DELETE FROM PostCategories WHERE post_id = ?", [post_id])
     db.execute("DELETE FROM Likes WHERE post_id = ?", [post_id])
     db.execute("DELETE FROM Comments WHERE post_id = ?", [post_id])
     db.execute("DELETE FROM Posts WHERE id = ?", [post_id])
@@ -106,6 +117,18 @@ def find(query, quality=""):
            OR dream LIKE ?
         ORDER BY id DESC
     """, [ex, ex])
+
+def classify(post_id):
+    return db.query("""
+        SELECT category, choice FROM PostCategories WHERE post_id = ?
+    """, [post_id])
+
+def update_categories(post_id, categories):
+    db.execute("DELETE FROM PostCategories WHERE post_id = ?", [post_id])
+    for cat, choice in categories:
+        db.execute("""
+            INSERT INTO PostCategories (post_id, category, choice)
+            VALUES (?, ?, ?)""", [post_id, cat, choice])
 
 def add_tags(post_id, tags):
     post_tags = []
