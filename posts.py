@@ -21,6 +21,7 @@ def get(user_id=None):
     if user_id is None:
         query = """
             SELECT p.id, p.title, p.dream dream,
+                   p.visibility,
                    u.username, u.id user_id
             FROM Posts p, Users u
             WHERE p.user_id = u.id
@@ -31,7 +32,8 @@ def get(user_id=None):
         query = """
             SELECT u.id user_id, p.id post_id, 
                    p.title, u.username,
-                   p.sleep_quality, p.dream
+                   p.sleep_quality, p.dream,
+                   p.visibility
             FROM Posts p, Users u
             WHERE p.user_id = u.id
               AND p.id = ?"""
@@ -42,6 +44,7 @@ def get(user_id=None):
 def get_popular_posts():
     query = """
         SELECT p.id, p.title, p.dream dream,
+               p.visibility,
                u.username, u.id user_id,
                COUNT(l.id) like_count
         FROM Posts p
@@ -54,6 +57,7 @@ def get_popular_posts():
 def get_friend_posts(user_id):
     query = """
         SELECT p.id, p.title, p.dream dream,
+               p.visibility,
                u.username, u.id user_id
         FROM Posts p
         JOIN Users u ON p.user_id = u.id

@@ -40,9 +40,13 @@ def index():
 
     tab = request.args.get("t", "latest")
     published = posts.get()
+    user_id = None
+
+    if logged_in():
+        user_id = session["user_id"]
+
     if tab == "friends" and logged_in():
-        user = session["user_id"]
-        published = posts.get_friend_posts(user)
+        published = posts.get_friend_posts(user_id)
     elif tab == "popular":
         published = posts.get_popular_posts()
 
@@ -54,6 +58,20 @@ def index():
             post["preview"] = f"{dream[:n]}..."
         else:
             post["preview"] = dream
+
+        visibility = post["visibility"]
+        poster_id = post["user_id"]
+
+        is_poster = is_friend = False
+
+        if logged_in():
+            is_poster = user_id == poster_id
+            is_friend = users.is_following(poster_id, user_id)
+
+        if visibility == "private" and not is_poster:
+            continue
+        if visibility == "friends-only" and not (is_poster or is_friend):
+            continue
 
         objs.append(post)
             
@@ -120,14 +138,38 @@ def toggle_follow(user_id, toggle):
 @app.route("/post/<int:post_id>")
 def display_post(post_id):
     post = posts.get(post_id) or abort(404, "Inlägget hittades inte.")
+    visibility = post["visibility"]
+    poster_id = post["user_id"]
+
+    user_id = None
+    
+    # TODO - stronger typing, like enum
+    # if visibility == "private" and :
+    #     abort(403, "Inlägget är inte tillgängligt.")
+
+    is_liked = False
+    is_friend = False
+    is_poster = False
+
+    # TODO - recompose to separate function
+    if logged_in():
+        user_id = session["user_id"]
+        is_liked = users.has_liked(user_id, post_id)
+        is_poster = user_id == poster_id
+        is_friend = users.is_following(poster_id, user_id) or is_poster
+
+    if visibility != "public" and user_id is None:
+        abort(403, "Du måste vara inloggad.")
+    
+    if visibility == "private" and not is_poster:
+        abort(403, "Inlägget är inte tillgängligt.")
+
+    if visibility == "friends-only" and not is_friend:
+        abort(403, "Inlägget är inte tillgängligt.")
+
     comments = posts.get_comments(post_id)
     likes = posts.get_likes(post_id)
     quality = sleep_emoticon(post["sleep_quality"])
-
-    is_liked = False
-    if "user_id" in session:
-        user_id = session["user_id"]
-        is_liked = users.has_liked(user_id, post_id)
 
     return render_template(
         "post.html", 
