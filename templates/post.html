@@ -46,6 +46,13 @@ av <a href="/user/{{ post.username }}">{{ post.username }}</a>
 {% endif %}
 
 <h3>Kommentar</h3>
+
+{% if comments %}
+  <div class="info">
+    Det finns {{ comments | count }} kommentar.
+  </div>
+{% endif %}
+
 <form action="/comment" method="post">
   <textarea name="comment" rows="1" cols="45" maxlength="320"
   placeholder="Kommentera något..." required></textarea> 
@@ -56,15 +63,20 @@ av <a href="/user/{{ post.username }}">{{ post.username }}</a>
 </form>
 
 {% if comments %}
-  <ul class="comments">
+  <div class="comments">
   {% for comment in comments %}
-    <li id="{{ comment.comment_id }}">
-      <b><a href="/user/{{ comment.username }}">
-        {{ comment.username }}</a></b>: 
+  <div class="comment">
+    <div class="username">
+      <a href="/user/{{ comment.username }}">
+        {{ comment.username }}
+      </a> </div>
+
+    <div class="content" id="{{ comment.comment_id }}">
       {{ comment.content }}
-    </li>
+    </div>
+  </div>
   {% endfor %}
-  </ul>
+  </div>
 {% else %}
 <p>
   Inga kommentar ännu...
