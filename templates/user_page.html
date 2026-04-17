@@ -12,15 +12,17 @@
       {{ "Följ" if not following else "Sluta följa" }}
     </a></p>
 
+  <div class="image">
+  <!-- nyi -->    
+  </div>
+
   <div class="user_data">
     {% for d in data %}
     <div class="data">
       {{ data[d] }}
-    </div>
     {% endfor %}
-    <div class="data">
-      {{ posts | count }} inlägg <br />
-      {{ followers | count }} följare <br />
+    | {{ posts | count }} inlägg
+    |  {{ followers | count }} följare
     </div>
   </div>
   

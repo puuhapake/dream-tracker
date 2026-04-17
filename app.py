@@ -12,6 +12,7 @@ import db
 import config
 import posts
 import users
+import formatter
 
 
 app = Flask(__name__)
@@ -31,7 +32,13 @@ def check_csrf() -> bool:
 @app.template_filter()
 def show_lines(content):
     content = str(escape(content))
+    content = formatter.escape(content)
+    
+    content = formatter.set_dashes(content)
+    content = formatter.set_emphs(content)
     content = content.replace("\n", "<br />")
+
+    content = formatter.unescape(content)
     return Markup(content)
 
 @app.route("/")
@@ -176,7 +183,7 @@ def display_post(post_id):
 
     comments = posts.get_comments(post_id)
     likes = posts.get_likes(post_id)
-    quality = sleep_emoticon(post["sleep_quality"])
+    quality = formatter.to_emoticon(post["sleep_quality"])
     tags = posts.get_tags(post_id)
     categories = posts.classify(post_id)
 
@@ -189,21 +196,6 @@ def display_post(post_id):
         quality=quality,
         tags=tags,
         categories=categories)
-
-def sleep_emoticon(value):
-    match int(value):
-        case 5:
-            return ":D"
-        case 4:
-            return ":)"
-        case 3:
-            return ":/"
-        case 2:
-            return ":("
-        case 1:
-            return ":C"
-        case _:
-            return None
 
 @app.route("/draft")
 def new_post():

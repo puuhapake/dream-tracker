@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ post.title }}{% endblock %}
+{% block title %}{{ post.title }} av {{ post.username }}{% endblock %}
 {% block content %}
 
 <div class="page"> <div class="page_context"></div>
@@ -19,27 +19,29 @@ av <a href="/user/{{ post.username }}">{{ post.username }}</a>
 <b>Sömnkvalitet</b>: {{ quality }}
 <p>{{ post.dream | show_lines }}</p>
 
+<div class="info">
+  {% if tags %}
+  <div class="tags">
+    {% for tag in tags %}
+      #{{ tag.tag }}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="likes">
+  <form action="/like" method="post">
+    <input type="hidden" name="post_id" value="{{ post.post_id }}" />
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+    <input type="submit" name="toggle_like" 
+      value="{{ '</3' if is_liked else '<3' }}" />
+    {{ likes | count }} användare gillar detta
+  </form> </div>
+</div>
+
 {% if session.user_id == post.user_id %}
-<p>
+<div class="controls">
   <a href="/edit_post/{{ post.post_id }}">Redigera</a>
   <a href="/delete_post/{{ post.post_id }}">Radera</a>
-</p>
-{% endif %}
-
-<form action="/like" method="post">
-  <input type="hidden" name="post_id" value="{{ post.post_id }}" />
-  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-  <input type="submit" name="toggle_like" 
-    value="{{ 'Ogilla' if is_liked else 'Gilla' }}" />
-  {{ likes | count }} användare gillar detta
-</form>
-
-{% if tags %}
-<h4>Nyckelord</h4>
-<div class="tags">
-  {% for tag in tags %}
-    #{{ tag.tag }}
-  {% endfor %}
 </div>
 {% endif %}
 
