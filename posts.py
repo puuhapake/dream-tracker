@@ -162,6 +162,10 @@ def get_comments(post_id):
         ORDER BY c.id DESC
     """, [post_id])
 
+def comment_count(post_id):
+    query = "SELECT COUNT(post_id) count FROM Comments WHERE post_id = ?"
+    return db.query(query, [post_id])
+
 def like(post_id, user_id, state):
     if state:
         db.execute("""

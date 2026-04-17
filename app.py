@@ -92,7 +92,7 @@ def user_page(username):
 
     posts = users.posts(user_id)
     comments = users.get_comments(user_id) if tab == "comments" else None
-    likes = users.get_likes(user_id) if tab == "likes" else None
+    liked_posts = users.get_likes(user_id) if tab == "likes" else None
 
     is_following = False
     if "user_id" in session:
@@ -101,17 +101,23 @@ def user_page(username):
             target_user=user_id)
 
     followers = users.get_followers(user_id)
+    like_count = users.get_like_count(user_id)["likes"] 
+
+    data = {
+        "time": f"Användare sedan {time}",
+        "like_count": f"{like_count} likes",
+    }
 
     return render_template(
         "user_page.html", 
         user=user, 
+        data=data,
         tab=tab,
         posts=posts,
-        time=time,
-        likes=likes,
+        liked_posts=liked_posts,
         comments=comments,
-        following=is_following,
-        followers=followers)
+        followers=followers,
+        following=is_following)
 
 @app.route("/follow/<int:user_id>")
 def follow(user_id):

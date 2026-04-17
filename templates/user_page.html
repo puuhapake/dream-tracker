@@ -8,15 +8,21 @@
 <div class="profile">
 
   <h2>Användare {{ user.username }}</h2>
-
-  <div class="user_data"><ul>
-    <li>Användare sedan {{ time }}.</li>
-    <li>{{ posts | count }} inlägg.</li>
-    <li>{{ followers | count }} följare.</li>
-    <li><a href="/{{ 'un' if following else '' }}follow/{{ user.id }}">
+    <p><a href="/{{ 'un' if following else '' }}follow/{{ user.id }}">
       {{ "Följ" if not following else "Sluta följa" }}
-    </a></li>
-  </ul></div>
+    </a></p>
+
+  <div class="user_data">
+    {% for d in data %}
+    <div class="data">
+      {{ data[d] }}
+    </div>
+    {% endfor %}
+    <div class="data">
+      {{ posts | count }} inlägg <br />
+      {{ followers | count }} följare <br />
+    </div>
+  </div>
   
   <nav class="tabs">
     <a href="/user/{{ user.username }}?tab=posts">Inlägg</a> |
@@ -37,7 +43,8 @@
     {% for comment in comments %}
       <div class="comment">
         <span class="context">Kommentar på </span>
-        <a class="title" href="/post/{{ comment.post_id }}#{{ comment.comment_id }}">
+        <a class="title" 
+        href="/post/{{ comment.post_id }}#{{ comment.comment_id }}">
           {{ comment.post_title }}
         </a> 
         <p>
@@ -51,11 +58,12 @@
 
 {% elif tab == "likes" %}
   <h3>Gillade inlägg</h3>
-  {% if likes %}
-    {% for post in likes %}
+  {% if liked_posts %}
+    {% for post in liked_posts %}
     <div class="post">
       <div class="title">
-        <a class="p_title" href="/post/{{ post.post_id }}">{{ post.title }}</a>
+        <a class="p_title" href="/post/{{ post.post_id }}"
+        >{{ post.title }}</a>
         <span class="p_poster">
           av <a class="p_link" href="/user/{{ post.username }}">
             {{ post.username }}
@@ -77,7 +85,8 @@
     {% for post in posts %}
     <div class="post">
       <div class="title">
-        <a class="p_title" href="/post/{{ post.id }}">{{ post.title }}</a>
+        <a class="p_title" href="/post/{{ post.id }}"
+        >{{ post.title }}</a>
       </div>
       <div class="content">
         {{ post.dream }}

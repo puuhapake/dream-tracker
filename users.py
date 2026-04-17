@@ -61,6 +61,14 @@ def get_likes(user_id):
         ORDER BY l.id DESC"""
     return db.query(query, [user_id])
 
+def get_like_count(user_id):
+    return db.query("""
+        SELECT COUNT(l.id) likes
+        FROM Likes l
+        JOIN Posts p ON l.post_id = p.id
+        WHERE p.user_id = ?
+    """, [user_id])[0]
+
 def has_liked(user_id, post_id):
     return db.query("""
         SELECT COUNT(id) likes
