@@ -78,6 +78,7 @@ def update(post_id, title, quality, dream):
 
 def delete(post_id):
     """Removes a post from the database."""
+    delete_tags(post_id)
     db.execute("DELETE FROM Likes WHERE post_id = ?", [post_id])
     db.execute("DELETE FROM Comments WHERE post_id = ?", [post_id])
     db.execute("DELETE FROM Posts WHERE id = ?", [post_id])
@@ -104,6 +105,23 @@ def find(query, quality=""):
            OR dream LIKE ?
         ORDER BY id DESC
     """, [ex, ex])
+
+def add_tags(post_id, tags):
+    post_tags = []
+    for t in tags:
+        post_tags.append((post_id, t))
+
+    db.executemany(
+        """INSERT INTO Tags (post_id, tag)
+        VALUES (?, ?)""",
+        post_tags
+    )
+
+def delete_tags(post_id):
+    db.execute("DELETE FROM Tags WHERE post_id = ?", [post_id])
+
+def get_tags(post_id):
+    return db.query("SELECT tag FROM Tags WHERE post_id = ?", [post_id])
 
 def add_comment(post_id, user_id, content):
     db.execute("""

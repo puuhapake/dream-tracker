@@ -170,6 +170,7 @@ def display_post(post_id):
     comments = posts.get_comments(post_id)
     likes = posts.get_likes(post_id)
     quality = sleep_emoticon(post["sleep_quality"])
+    tags = posts.get_tags(post_id)
 
     return render_template(
         "post.html", 
@@ -177,7 +178,8 @@ def display_post(post_id):
         comments=comments,
         is_liked=is_liked,
         likes=likes,
-        quality=quality)
+        quality=quality,
+        tags=tags)
 
 def sleep_emoticon(value):
     match int(value):
@@ -226,9 +228,11 @@ def publish():
     # delay = delay_hour * 60 + delay_min
     delay = 0
 
-    # tags = set()
-    # for t in request.form["tags"].split(","):
-    #     tags.add(t.strip())
+    # TODO - DRY
+    tags = set()
+    for t in request.form["tags"].split(","):
+        tags.add(t.strip())
+    tags = list(tags)
 
     if len(title) < 1 or len(title) > config.MAX_TITLE_LENGTH:
         abort(403, "Titeln har fel längd")
@@ -240,6 +244,9 @@ def publish():
         visibility, bedtime, delay,
         sleep_type
         )
+
+    post_id = db.last_insert_id()
+    posts.add_tags(post_id, tags)
 
     return redirect("/")
 
@@ -289,7 +296,11 @@ def edit_post(post_id):
     if post["user_id"] != session["user_id"]:
         abort(403)
 
+    tags = [tag["tag"] for tag in posts.get_tags(post_id)]
+    tags = ", ".join(tags)
+
     return render_template("edit_post.html", post=post,
+        tags=tags,
         title_max=config.MAX_TITLE_LENGTH,
         dream_max=config.MAX_DREAM_LENGTH)
 
@@ -309,12 +320,23 @@ def edit():
     quality = request.form["sleep_quality"]
     dream = request.form["dream"]
 
+    tags = set()
+    for t in request.form["tags"].split(","):
+        if t.strip() == '':
+            continue
+        tags.add(t.strip())
+    tags = list(tags)
+
     if len(title) < 1 or len(title) > config.MAX_TITLE_LENGTH:
         abort(403, "Titelns längd är fel.")
     if len(dream) > config.MAX_DREAM_LENGTH:
         abort(403, "Texten är för lång.")
 
     posts.update(post_id, title, quality, dream)
+    
+    posts.delete_tags(post_id)
+    posts.add_tags(post_id, tags)
+
     return redirect(f"post/{post_id}")
 
 @app.route("/delete_post/<int:post_id>", methods=["GET", "POST"])

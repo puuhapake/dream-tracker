@@ -47,3 +47,10 @@ CREATE TABLE Friends (
     user_id INTEGER REFERENCES Users(id),
     friend_id INTEGER REFERENCES Users(id)
 );
+
+CREATE TABLE Tags (
+    id INTEGER PRIMARY KEY,
+    post_id INTEGER REFERENCES Posts(id),
+    tag TEXT,
+    UNIQUE(post_id, tag)
+);

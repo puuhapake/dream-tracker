@@ -25,6 +25,15 @@ av <a href="/user/{{ post.username }}">{{ post.username }}</a>
   {{ likes | count }} användare gillar detta
 </form>
 
+{% if tags %}
+<h4>Nyckelord</h4>
+<div class="tags">
+  {% for tag in tags %}
+    #{{ tag.tag }}
+  {% endfor %}
+</div>
+{% endif %}
+
 <h3>Kommentar</h3>
 <form action="/comment" method="post">
   <textarea name="comment" rows="1" cols="45" maxlength="320"
@@ -34,6 +43,7 @@ av <a href="/user/{{ post.username }}">{{ post.username }}</a>
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" name="submit" value="Publicera" />
 </form>
+
 {% if comments %}
   <ul class="comments">
   {% for comment in comments %}

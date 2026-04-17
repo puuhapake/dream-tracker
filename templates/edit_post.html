@@ -19,13 +19,21 @@
     <input type="range" id="sleep_quality" name="sleep_quality"
     min="1" max="5" step="1" value="{{ post.sleep_quality }}">
   </p>
+  
   <p>
     Vad drömde du om? <br />
     <textarea name="dream" rows="10" cols="64" 
     maxlength="{{ dream_max }}">{{ post.dream }}</textarea>
   </p>
+  
+  <p>
+    Nyckelord
+    <input type="text" name="tags" value="{{ tags }}">
+  </p>
+
   <input type="hidden" name="post_id" value="{{ post.post_id }}" />
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  
   <input type="submit" value="Uppdatera" />
 </form>
 </div> </div>
