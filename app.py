@@ -139,19 +139,23 @@ def user_page(username):
         followers=followers,
         following=is_following)
 
-@app.route("/follow/<int:user_id>")
+@app.route("/follow/<int:user_id>", methods=["POST"])
 def follow(user_id):
     toggle_follow(user_id, True)
     username = users.get(user_id)["username"]
     return redirect(f"/user/{username}")
+    check_csrf()
+    if not logged_in():
+        abort(403, config.ERRORS["login"])
 
-@app.route("/unfollow/<int:user_id>")
 def unfollow(user_id):
     toggle_follow(user_id, False)
     username = users.get(user_id)["username"]
     return redirect(f"/user/{username}")
 
 def toggle_follow(user_id, toggle):
+def unfollow(user_id):
+    check_csrf()
     if not logged_in():
         abort(403, config.ERRORS["login"])
 

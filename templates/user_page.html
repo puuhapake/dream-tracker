@@ -8,9 +8,21 @@
 <div class="profile">
   <h2>Användare {{ user.username }}</h2>
     <p>
-      <a href="/{{ 'un' if following else '' }}follow/{{ user.id }}">
-        {{ "Följ" if not following else "Sluta följa" }}
-      </a>
+      {% if following %}
+        <form method="post" action="/unfollow/{{ user.id }}">
+          <button type="submit">Sluta följa</button>
+          
+          <input type="hidden" name="csrf_token" 
+          value="{{ session.csrf_token }}" />
+        </form>
+      {% else %}
+        <form method="post" action="/follow/{{ user.id }}">
+          <button type="submit">Följ</button>
+          
+          <input type="hidden" name="csrf_token"
+          value="{{ session.csrf_token }}" />
+        </form>
+      {% endif %}
     </p>
 
   <!--
