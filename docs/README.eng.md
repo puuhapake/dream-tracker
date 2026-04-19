@@ -28,6 +28,7 @@ or as a self-contained virtual environment
 ```
 $ python -m venv venv
 $ venv/bin/activate
+$ pip install flask
 ```
 
 3. Start the server and navigate to `localhost:5000` with a browser of your choice

@@ -28,6 +28,7 @@ tai virtuaaliympäristössä
 ```
 $ python -m venv venv
 $ venv/bin/activate
+$ pip install flask
 ```
 
 3. Käynnistä palvelin ja avaa osoite `localhost:5000` valinnaisella verkkoselaimella

@@ -31,6 +31,7 @@ eller i en `venv`-virtualomgivning:
 ```
 $ python -m venv venv
 $ venv/bin/activate
+$ pip install flask
 ```
 
 3. Starta servern och navigera till `localhost:5000` med en valfri webbläsare
