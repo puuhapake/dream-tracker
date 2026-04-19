@@ -248,3 +248,8 @@ nav {
 .search .filter {
     padding: 0.3em 0 0 0;
 }
+
+.like_count {
+    padding: auto;
+    color: darkgray;
+}
