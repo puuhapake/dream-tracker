@@ -2,6 +2,9 @@ from flask import Flask
 from flask import render_template, session
 from flask import abort, request, redirect
 
+from flask import g
+from time import time
+
 from werkzeug.exceptions import HTTPException
 from markupsafe import Markup, escape
 
@@ -469,3 +472,13 @@ def logout():
 @app.errorhandler(HTTPException)
 def error_page(e, prev="/"):
     return render_template("error.html", error=e, prev=prev), e.code
+
+@app.before_request
+def before_request():
+    g.start_time = time()
+
+@app.after_request
+def after_request(response):
+    t = round(time() - g.start_time, 2)
+    print(f">> Request time: {t} seconds")
+    return response
