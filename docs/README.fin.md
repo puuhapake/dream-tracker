@@ -1,6 +1,8 @@
 # dream-tracker
 Yksinkertainen some unen laadun kirjaamiseen sekä unten tarinoiden jakamiseen muiden käyttäjien kanssa.
 
+Lue [seed-raportti](/docs/seed_report.fin.md)
+
 ## Toiminnot
 Käyttäjät voivat
 - luoda tunnuksen ja kirjautua sisään

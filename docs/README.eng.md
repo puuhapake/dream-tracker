@@ -1,6 +1,8 @@
 # dream-tracker
 A simple social platform for recording and tracking sleep quality and the narratives experienced during rapid eye movement dreaming.
 
+Read the [seed-report](/docs/seed_report.eng.md)
+
 ## Functionality
 Users can
 - create an account and sign in

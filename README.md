@@ -4,6 +4,8 @@ En enkel social plattform för att mäta och dokumentera sömnkvalitet samt de d
 [Dokumentaatio on myös saatavilla suomeksi](/docs/README.fin.md).
 [Documentation also available in English](/docs/README.eng.md).
 
+Det finns en [seed-rapport](/docs/seed_report.swe.md) nu.
+
 ## Funktioner
 Användare kan
 - skapa ett konto och logga in
