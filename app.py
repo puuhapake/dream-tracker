@@ -87,6 +87,15 @@ def index():
         limit=limit,
         offset=offset
     )
+    total_posts = posts.posts_per_page(
+        user_id=user_id,
+        tab=tab,
+        q=query,
+        sleep_quality=quality_filter,
+        tags=tags,
+        cats=cats
+    )
+    page_count = (total_posts + limit - 1) // limit
 
     retrieved = []
     for post in post_list:
@@ -106,7 +115,10 @@ def index():
         user_count=posts.user_count(),
         post_count=posts.post_count(),
         posts=retrieved,
-        categories=categories)
+        categories=categories,
+        page=page,
+        page_count=page_count,
+        limit=limit)
 
 @app.route("/user/<username>")
 def user_page(username):

@@ -24,47 +24,37 @@ def add(user_id, post_time, title, quality, dream,
         visibility, bedtime, delay
     ])
 
-def get_posts(user_id=None, tab="latest", q=None, 
-             sleep_quality=None, tags=None, cats=None,
-             limit=None, offset=0):
-    sql = """
-        SELECT p.id, p.title, p.dream, p.sleep_quality,
-               p.bedtime, p.sleep_delay,
-               p.visibility, p.user_id, u.username,
-               COUNT(l.id) like_count
-        FROM Posts p
-        INNER JOIN Users u ON p.user_id = u.id
-        LEFT JOIN Likes l ON l.post_id = p.id 
-    """
-
+def create_filters(user_id=None, tab="latest", q=None,
+                   sleep_quality=None, tags=None, cats=None):
     conditions = []
     args = []
 
     vis = ["p.visibility = 'public'"]
-
     if user_id is not None:
         vis.append("(p.visibility = 'private' AND p.user_id = ?)")
+        args.append(user_id)
+
+        vis.append("(p.visibility = 'friends-only AND p.user_id = ?)")
         args.append(user_id)
 
         vis.append("""
             (p.visibility = 'friends-only' AND EXISTS (
                 SELECT 1 FROM Friends f
-                WHERE f.user_id = p.user_id AND f.friend_id = ?
-            ))
-        """)
+                WHERE f.user_id = p.user_id
+                  AND f.friend_id = ?
+            ))""")
         args.append(user_id)
-    
-    conditions = ["(" + " OR ".join(vis) + ")"]
+    conditions.append("(" + " OR ".join(vis) + ")")
 
     if tab == "friends" and user_id is not None:
         conditions.append("""
             EXISTS (
                 SELECT 1 FROM Friends f
-                WHERE f.user_id = ? AND f.friend_id = p.user_id
-            )
-        """)
+                WHERE f.user_id = ?
+                  AND f.friend_id = p.user_id
+            )""")
         args.append(user_id)
-    
+
     if q:
         ex = f"%{q}%"
         conditions.append("(p.title LIKE ? OR p.dream LIKE ?)")
@@ -78,40 +68,79 @@ def get_posts(user_id=None, tab="latest", q=None,
         for t in tags:
             conditions.append("""
                 EXISTS (
-                    SELECT 1 FROM Tags t
-                    WHERE t.post_id = p.id
-                      AND t.tag = ?
-                )""")
+                    SELECT 1 FROM Tags tg
+                    WHERE tg.post_id = p.id
+                      AND tg.tag = ? 
+                    )""")
             args.append(t)
 
     if cats:
-        for title, option in cats.items():
+        for cat, choice in cats.items():
             conditions.append("""
                 EXISTS (
                     SELECT 1 FROM PostCategories pc
                     WHERE pc.post_id = p.id
                       AND pc.category = ?
                       AND pc.choice = ?
-            )""")
-            args.extend([title, option])
+                )""")
+            args.extend([cat, choice])
 
-    where = "WHERE " + " AND ".join(conditions) if conditions else ""
-    group = """GROUP BY p.id, p.title, p.dream, p.sleep_quality,
-                        p.bedtime, p.sleep_delay, p.visibility,
-                        p.user_id, u.username"""
+    if conditions:
+        where = "WHERE " + " AND ".join(conditions)
+    else:
+        where = ""
+
+    return where, args    
+
+def get_posts(user_id=None, tab="latest", q=None, 
+             sleep_quality=None, tags=None, cats=None,
+             limit=None, offset=0):
+
+    # if logged out, show no friend posts.
+    if tab == "friends" and user_id is None:
+        return []
     
+    where, args = create_filters(user_id, tab, q, sleep_quality, 
+                                tags, cats)
+
+    sql = """
+        SELECT p.id, p.title, p.dream, p.sleep_quality,
+               p.bedtime, p.sleep_delay,
+               p.visibility, p.user_id, u.username,
+                (SELECT COUNT(id) FROM Likes l
+                 WHERE l.post_id = p.id) like_count
+        FROM Posts p
+        INNER JOIN Users u ON p.user_id = u.id 
+    """
+
     if tab == "popular":
         order = "ORDER BY like_count DESC, p.id DESC"
     else:
         order = "ORDER BY p.id DESC"
     
-    query = f"{sql} {where} {group} {order}"
+    query = f"{sql} {where} {order}"
 
     if limit:
         query += " LIMIT ? OFFSET ?"
         args.extend([limit, offset])
 
     return db.query(query, args)
+
+def posts_per_page(user_id=None, tab="latest", q=None,
+                   sleep_quality=None, tags=None, cats=None):
+    """Counts the number of posts per page that match filters."""
+    
+    # if logged out, show no friend posts
+    if tab == "friends" and user_id is None:
+        return 0
+
+    where, args = create_filters(
+        user_id, tab, q, sleep_quality, tags, cats
+    )
+
+    sql = f"SELECT COUNT(id) total FROM Posts p {where}"
+    result = db.query(sql, args)
+    return result[0]["total"] if result else 0
 
 def get(post_id):
     """Gets a post from the database by id."""

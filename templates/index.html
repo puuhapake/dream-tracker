@@ -84,6 +84,32 @@
   </nav>
 </p>
 
+{% if page_count > 1 %}
+<div class="pagination">
+  {% set args = request.args.to_dict() %}
+
+  {% if page > 1 %}
+    {% set prev = args.copy() %}
+    {% set temp = prev.update({"page": page - 1}) %}
+
+    <a href="?{{ prev | urlencode }}">
+      &lt;
+    </a>
+  {% endif %}
+
+  <span>{{ page }} / {{ page_count }}</span>
+
+  {% if page < page_count %}
+    {% set next = args.copy() %}
+    {% set temp = next.update({"page": page + 1}) %}
+
+    <a href="?{{ next | urlencode }}">
+      &gt;
+    </a>
+  {% endif %}
+</div>
+{% endif %}
+
 </div>
 
 <div class="context">
