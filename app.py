@@ -155,6 +155,9 @@ def follow(user_id):
     if not logged_in():
         abort(403, config.ERRORS["login"])
 
+    if user_id == session["user_id"]:
+        abort(403, config.ERRORS["generic"])
+
     users.follow(session["user_id"], user_id)
     username = users.get(user_id)["username"]
     return redirect(f"/user/{username}")
