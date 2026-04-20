@@ -116,7 +116,11 @@ def user_page(username):
     tab = request.args.get("tab", "posts")
     time = users.join_date(user_id, user["created_at"])
 
-    posts = users.posts(user_id)
+    viewer_id = None
+    if logged_in():
+        viewer_id = session["user_id"]
+
+    posts = users.posts(user_id, viewer_id)
     comments = users.get_comments(user_id) if tab == "comments" else None
     liked_posts = users.get_likes(user_id) if tab == "likes" else None
 

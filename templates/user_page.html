@@ -7,6 +7,7 @@
   
 <div class="profile">
   <h2>Användare {{ user.username }}</h2>
+    {% if user.id != session.user_id %}
     <p>
       {% if following %}
         <form method="post" action="/unfollow/{{ user.id }}">
@@ -24,6 +25,7 @@
         </form>
       {% endif %}
     </p>
+    {% endif %}
 
   <!--
   <div class="image">

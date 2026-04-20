@@ -27,6 +27,7 @@ ERRORS = {
     "lencomm": "Kommentarets längd är fel.",
     "liked": "Inlägget har redan gillats!",
     "unavail": "Inlägget är inte tillgängligt.",
+    "generic": "Operationen är inte tillåten."
 }
 
 WORKING_DIR = Path(__file__).parent
