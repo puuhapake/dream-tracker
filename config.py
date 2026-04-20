@@ -9,6 +9,7 @@ MAX_USERNAME_LENGTH = 22
 USERNAME_RESTRICTION = "[a-zA-Z0-9]+"
 MIN_PASSWORD_LENGTH = 1
 MAX_PREVIEW_LENGTH = 165
+POST_LIMIT = 20
 
 ERRORS = {
     "login": "Du måste vara inloggad.",

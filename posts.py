@@ -25,7 +25,8 @@ def add(user_id, post_time, title, quality, dream,
     ])
 
 def get_posts(user_id=None, tab="latest", q=None, 
-             sleep_quality=None, tags=None, cats=None):
+             sleep_quality=None, tags=None, cats=None,
+             limit=None, offset=0):
     sql = """
         SELECT p.id, p.title, p.dream, p.sleep_quality,
                p.bedtime, p.sleep_delay,
@@ -105,6 +106,11 @@ def get_posts(user_id=None, tab="latest", q=None,
         order = "ORDER BY p.id DESC"
     
     query = f"{sql} {where} {group} {order}"
+
+    if limit:
+        query += " LIMIT ? OFFSET ?"
+        args.extend([limit, offset])
+
     return db.query(query, args)
 
 def get(post_id):

@@ -48,6 +48,11 @@ def show_lines(content):
 @app.route("/")
 def index():
     n = config.MAX_PREVIEW_LENGTH
+    limit = config.POST_LIMIT
+
+    page = max(request.args.get("page", 1, type=int), 1)
+    print(page)
+    offset = (page - 1) * limit
 
     tab = request.args.get("t", "latest")
     query = request.args.get("q", "").strip() or None
@@ -78,7 +83,9 @@ def index():
         q=query,
         sleep_quality=quality_filter,
         tags=tags,
-        cats=cats
+        cats=cats,
+        limit=limit,
+        offset=offset
     )
 
     retrieved = []
