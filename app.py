@@ -268,9 +268,9 @@ def publish():
 
 @app.route("/like", methods=["POST"])
 def like():
-    check_csrf()
     if not logged_in():
         abort(401, config.ERRORS["login"])
+    check_csrf()
 
     post_id = request.form["post_id"]
     user_id = session["user_id"]

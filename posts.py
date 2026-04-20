@@ -181,7 +181,7 @@ def get_tags(post_id):
 
 def parse_tags(tags):
     if not tags:
-        return None
+        return []
     tags = {t.strip() for t in tags.split(",") if t.strip()}
     return list(tags)
 
